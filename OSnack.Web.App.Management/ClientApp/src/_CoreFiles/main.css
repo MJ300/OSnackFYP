@@ -1,0 +1,181 @@
+﻿/******************************/
+/********* Web Styles *********/
+html {
+    /*visibility: hidden;*/
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+    background-attachment: fixed;
+    background-position: center center;
+    background-size: cover;
+    background-image: url(/Images/MintOliveBG.jpg);
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    /* Margin bottom by footer height */
+    padding-bottom: 6rem;
+    min-height: 100vh;
+    background-color: rgba(255, 255, 255, 0.60);
+    font-family: 'Varela Round', sans-serif;
+}
+
+.footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    white-space: nowrap;
+    /* Set the fixed height of the footer here */
+    background-color: rgba(61, 95, 9,0.50);
+}
+
+    .footer ul {
+        list-style-type: none;
+    }
+
+    .footer li, .footer a {
+        color: white;
+    }
+
+
+/*******************************************/
+/************ Custom Containers ************/
+.custom-container {
+    width: 100%;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    max-width: 100% !important;
+    padding-bottom: 7rem;
+}
+
+/*******************************************/
+/************ Background Colors ************/
+/*.bg-transparent {
+    background-color: rgba(0, 0, 0, 0.00) !important;
+    width: 100%;
+}*/
+
+.bg-header {
+    background-color: rgb(250, 250, 250);
+}
+
+.bg-red {
+    background-color: rgba(254, 9, 8, 0.40);
+    color: rgb(120, 9, 8);
+}
+
+.bg-yellow {
+    background-color: rgba(253, 205, 0, 0.40);
+    color: rgb(94, 76, 0);
+}
+
+.bg-green {
+    background-color: rgba(108, 206, 9, 0.40);
+    color: rgb(53, 88, 6);
+}
+
+
+/*************************************/
+/************ font Styles ************/
+a {
+    cursor: pointer;
+}
+
+/*********************************/
+/************ Buttons ************/
+.link-no-underline {
+    text-decoration: none !important;
+}
+
+.btn {
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    transition: 700ms ease-in font-weight, 700ms color ease-out, 700ms background-color ease-out;
+}
+
+.btn-green, .btn-green:active {
+    color: #fff;
+    background-color: rgba(61, 95, 9,0.65);
+}
+
+    .btn-green:active, .btn-green:focus {
+        box-shadow: 0 0 0 0.2rem rgba(61, 95, 9,0.65);
+    }
+
+    .btn-green:hover {
+        color: black;
+        background-color: rgba(61, 95, 9, 0.40);
+    }
+
+.btn-red, .btn-red:active {
+    color: #fff;
+    background-color: rgba(156, 10, 9, 0.60);
+}
+
+    .btn-red:active, .btn-red:focus {
+        box-shadow: 0 0 0 0.2rem rgba(156, 10, 9,0.60);
+    }
+
+    .btn-red:hover {
+        color: black;
+        background-color: rgba(156, 10, 9, 0.40);
+    }
+
+.btn-white, .btn-white:active {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.50);
+}
+
+    .btn-white:active, .btn-white:focus {
+        box-shadow: 0 0 0 0.2rem rgba(112, 112, 112, 0.60);
+    }
+
+    .btn-white:hover {
+        color: black;
+        background-color: rgba(186, 186, 186, 0.60);
+    }
+
+/********************************/
+/************ Extras ************/
+.loading-spinner {
+    position: relative;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    height: auto;
+    max-width: 3.3rem;
+    border-radius: 2.8rem;
+    background-color: transparent;
+    /*box-shadow: 0 0 0.5rem 0.2rem rgb(157, 173, 126);*/
+}
+
+.error-page {
+    text-align: center;
+    border-radius: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+}
+
+.boarder-none {
+    border: 0;
+}
+
+.hideMe {
+    opacity: 0;
+    /*transition: 100ms opacity ease-in;*/
+}
+
+.showMe {
+    opacity: 1;
+    transition: 100ms opacity ease-in;
+}

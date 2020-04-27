@@ -1,0 +1,1 @@
+﻿<br><a href="@@LinkHref" target="_blank" style="color: #666666; text-decoration: none;">@@LinkText</a>

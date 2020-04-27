@@ -1,0 +1,108 @@
+﻿.shop-card {
+    position: relative;
+    max-height: 14.5rem;
+    max-width: 14.5rem;
+    margin: 0.2rem;
+    background-color: transparent;
+}
+@media (max-width: 550px){
+    .shop-card{
+        max-height:10rem;
+        max-width:10rem;
+    }
+}
+
+
+/* Product Cards*/
+
+.shop-card-product {
+    min-width: 8.5rem;
+    min-height: 8.5rem;
+}
+
+@media (min-width:550px) {
+    .shop-card-product {
+        min-width: 10rem;
+        min-height: 10rem;
+        text-align: center;
+        color: black;
+        margin: 0.2rem;
+        text-decoration: none;
+        word-wrap: break-word;
+        border-bottom: 0.02rem solid rgba(61, 95, 9,0.75);
+    }
+}
+
+@media (min-width:760px) {
+    .shop-card-product {
+        min-width: 14.5rem;
+        min-height: 14.5rem;
+    }
+}
+
+.shop-card-title {
+    position: absolute;
+    color: white;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: 0;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    text-align: center;
+    font-weight: bold;
+    font-size: large;
+    letter-spacing: 0.1rem;
+    border-radius: 0.5rem;
+    background-color: rgba(61, 95, 9, 0.60);
+    transition: 700ms font-size ease-out, 700ms font-weight ease-out, 700ms background-color ease-out;
+}
+    .shop-card-title:hover {
+        font-weight: bolder;
+        background-color: rgba(61, 95, 9, 0.90);
+        font-size: x-large;
+        transition: 700ms font-size ease-out, 700ms font-weight ease-out, 700ms background-color ease-out;
+    }
+
+.shop-card-img {
+    min-width: 0.5rem;
+    min-height: 0.5rem;
+}
+
+@media (min-width:550px) {
+    .shop-card-img {
+        min-height: 14.5rem;
+        min-width: 14.5rem;
+    }
+}
+@media (min-width:760px) {
+    .shop-card-img {
+        min-height: 10rem;
+        min-width: 10rem;
+    }
+}
+
+.shop-card-quantity {
+    position: absolute;
+    color: white;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: auto;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    text-align: center;
+    font-weight: bold;
+    font-size: large;
+    letter-spacing: 0.1rem;
+    border-radius: 0.5rem;
+    background-color: rgba(61, 95, 9, 0.60);
+    transition: 700ms font-weight ease-out, 700ms background-color ease-out;
+}
+    .shop-card-quantity:hover {
+        font-weight: bolder;
+        background-color: rgba(61, 95, 9, 0.90);
+        transition: font-weight ease-out, 700ms background-color ease-out;
+    }

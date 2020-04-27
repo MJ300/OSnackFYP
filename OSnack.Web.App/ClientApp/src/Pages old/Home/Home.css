@@ -1,0 +1,46 @@
+﻿/*Custom Buttons*/
+.btn-orange, .btn-orange:focus {
+    margin-top: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 50px;
+    border: none;
+    color: #fff !important;
+    font-weight: bold;
+    font-size: 30px;
+    background-color: rgb(249, 154, 29);
+    box-shadow: 0 0 0 0.2rem rgba(249, 154, 29,0.50);
+    transition: 1s;
+}
+
+    .btn-orange:hover, .btn-orange:active {
+        text-align: center center;
+        box-shadow: 0 0 0 0.6rem rgba(249, 154, 29,0.50);
+        background-color: rgba(249, 154, 29,0.80);
+        border-radius: 100px;
+        font-size: 30px;
+        transition: 0.8s;
+        color: #fff;
+        overflow: visible;
+        transition: 1s;
+    }
+/*Welcome image Top image in home page*/
+.welcome-img {
+    width:100%;
+}
+
+.welcome-Title {
+    color: rgba(61, 95, 9,0.50) !important;
+    font-weight: bolder;
+    text-align: center center;
+    margin-top: 30px
+}
+
+.welcome-Text {
+    color: rgba(61, 95, 9,0.50) !important;
+    font-weight: bold;
+    text-align: center center;
+    margin-top: 10px
+}

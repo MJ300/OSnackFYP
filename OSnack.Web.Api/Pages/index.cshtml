@@ -1,0 +1,17 @@
+﻿@page "/"
+<img style="display:block; margin:auto; padding-top:10rem" src="~/SVGs/Infinity-2.3s-183px.svg" alt="Running...." />
+<h3 style="text-align: center;"><font id="Time" size="26"></font> left to auto refresh</h3>
+<h1 style="text-align: center;">OSnack API </h1>
+
+<script>
+    /// refresh page every minute
+    var countSecond = 60;
+    setInterval(function () {
+        if (countSecond == 0) {
+            location.reload();
+            countSecond = 60;
+        }
+        document.getElementById("Time").innerHTML = `${countSecond}s `;
+        countSecond--;
+    }, 1000);
+</script>

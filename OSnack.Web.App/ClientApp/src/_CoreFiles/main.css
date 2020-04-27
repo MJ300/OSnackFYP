@@ -1,0 +1,199 @@
+﻿/******************************/
+/********* Web Styles *********/
+html {
+/*visibility: hidden;*/
+font-size: 14px;
+position: relative;
+min-height: 100%;
+background-attachment: fixed;
+background-position: center center;
+background-size: cover;
+background-image: url(/Images/core//MintOliveBG.jpg);
+}
+@media (min-width: 768px) {
+html {
+    font-size: 16px;
+}
+}
+
+body{
+/* Margin bottom by footer height */
+padding-bottom: 6rem;
+position: relative;
+min-height: 100vh;
+background-color: rgba(255, 255, 255, 0.60);
+/*font-family: 'Noto Sans', sans-serif;*/
+font-family: 'Varela Round', sans-serif;
+}
+
+.footer {
+    position: absolute;
+    border-bottom: 0;
+    /*min-height: 20vh;*/
+    width: 100%;
+    bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    white-space: nowrap;
+    /* Set the fixed height of the footer here */
+    /*line-height: 60px; /* Vertically center the text there /*/
+    background-color: rgba(61, 95, 9,0.50);
+    background-size: cover;
+}
+
+    .footer ul {
+        list-style-type: none;
+    }
+
+
+/*******************************************/
+/************ Custom Containers ************/
+.custom-container {
+    width: 100%;
+    padding-right: 0px;
+    padding-left: 0px;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    max-width: 100% !important;
+}
+.container {
+    width: 100%;
+    padding-right: 0px;
+    padding-left: 0px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 90%;
+    align-self: center;
+}
+@media (max-width:575px) {
+    .container {
+        max-width: 95%;
+    }
+}
+
+.custom-fluid-container {
+    background-color: rgba(255, 255, 255, 0.80);
+    padding: 2rem;
+    border-radius: 4px;
+    margin-bottom: 3rem;
+}
+
+@media (max-width:570px) {
+    .custom-fluid-container {
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+@media (min-width:1000px) {
+    .custom-fluid-container {
+        width: 60%;
+    }
+}
+
+@media (min-width:1200px) {
+    .custom-fluid-container {
+        width: 40%;
+    }
+}
+
+/*******************************************/
+/************ Background Colors ************/
+.bg-transparent {
+    background-color: rgba(0, 0, 0, 0.00) !important;
+    width: 100%;
+}
+
+.bg-header {
+    background-color: rgb(250, 250, 250);
+}
+
+.bg-red {
+    background-color: rgba(254, 9, 8, 0.40);
+    color: rgb(120, 9, 8);
+}
+
+.bg-yellow {
+    background-color: rgba(253, 205, 0, 0.40);
+    color: rgb(94, 76, 0);
+}
+
+.bg-green {
+    background-color: rgba(108, 206, 9, 0.40);
+    color: rgb(53, 88, 6);
+}
+
+
+/*************************************/
+/************ font Styles ************/
+a  {
+    cursor: pointer;
+}
+.boarder-bottom {
+    box-shadow: rgba(0, 83, 255, 0.40) 0 0.2rem;
+    text-decoration: none !important;
+    padding-bottom:0.2rem;
+    margin-bottom:0.3rem;
+    text-align:center;
+    border:0;
+    height:auto;
+}
+/*********************************/
+/************ Buttons ************/
+.link-no-underline {
+    text-decoration: none !important;
+}
+
+.btn-green, .btn-green:active {
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    background-color: rgba(61, 95, 9,0.50);
+    transition: 700ms ease-in font-weight, 700ms color ease-out, 700ms background-color ease-out;
+}
+
+    .btn-green:active, .btn-green:focus {
+        box-shadow: 0 0 0 0.2rem rgba(61, 95, 9,0.50) !important;
+    }
+
+    .btn-green:hover {
+        color: black !important;
+        background-color: rgba(61, 95, 9, 0.30) !important;
+        transition: 700ms background-color ease-out, 700ms background-color ease-out;
+    }
+
+/********************************/
+/************ Extras ************/
+.loading-spinner {
+    position:relative;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    height: auto;
+    max-width: 3.3rem;
+    border-radius: 2.8rem;
+    background-color: transparent;
+    /*box-shadow: 0 0 0.5rem 0.2rem rgb(157, 173, 126);*/
+}
+.error-page{
+    text-align:center;
+    border-radius:2rem;
+    padding-left:2rem;
+    padding-right:2rem;
+    padding-top:2rem;
+    padding-bottom:1rem;
+}
+.boarder-none {
+    border:0;
+}
+
+.hideMe {
+    opacity: 0;
+    /*transition: 100ms opacity ease-in;*/
+}
+.showMe {
+    opacity: 1;
+    transition: 100ms opacity ease-in;
+}

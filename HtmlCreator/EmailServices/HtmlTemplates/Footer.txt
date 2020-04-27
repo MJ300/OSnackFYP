@@ -1,0 +1,14 @@
+﻿<tr>
+    <td bgcolor="#ffffff" align="center" style="padding: 20px 0px;">
+        <!-- UNSUBSCRIBE COPY -->
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="max-width: 500px;"
+            class="responsive-table">
+            <tr style="padding: 10px 0 0 0; border-top: 1px dashed #aaaaaa;">
+                <td align="center"
+                    style="font-size: 12px; line-height: 18px; font-family: Helvetica, Arial, sans-serif; color:#666666; padding: 10px 0 0 0;">
+                    @@FooterText
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
