@@ -23,18 +23,16 @@ namespace OSnack.Web.Api.Database.Models
             ValueType = TokenType.Subscription,
         };
 
+        [Key]
         [DataType(DataType.EmailAddress, ErrorMessage = "Invalid Email \n")]
         [Required(ErrorMessage = "Email is Required \n")]
         [RegularExpression(@"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
             ErrorMessage = "Invalid Email \n")]
-        [Key]
         public string Email { get; set; }
 
-        [NotMapped]
         public string DisplayName { get; set; }
 
         [JsonIgnore]
-        [ForeignKey("EmailId"), Column(Order = 1)]
         public oToken Token { get; set; }
 
     }

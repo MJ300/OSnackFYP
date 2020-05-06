@@ -2,33 +2,31 @@
 {
     public enum CouponType
     {
-        FreeDelivery = 1,
-        DiscountPrice = 2,
-        PercentageOfTotal = 3
+        FreeDelivery = 0,
+        DiscountPrice = 1,
+        PercentageOfTotal = 2
     }
 
     public enum TokenType
     {
-        ResetPassword = 1,
-        ConfirmEmail = 2,
-        Subscription = 3
+        ResetPassword = 0,
+        ConfirmEmail = 1,
+        Subscription = 2
     }
 
     public enum OrderStatusType
     {
-        Placed = 1,
-        Hold = 2,
-        Confirmed = 3,
-        Delivered = 4,
-        Canceled = 5
+        Placed = 0,
+        Hold = 1,
+        Confirmed = 2,
+        Delivered = 3,
+        Canceled = 4
     }
 
     public enum ProductUnitType
     {
-        Kg = 1,
-        Grams = 2,
-        PerItem = 3
+        Kg = 0,
+        Grams = 1,
+        PerItem = 2
     }
-
-
 }

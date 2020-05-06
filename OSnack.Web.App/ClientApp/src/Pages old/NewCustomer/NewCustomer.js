@@ -50,57 +50,57 @@ class NewCustomer extends React.PureComponent {
         return (
             <Container className="custom-fluid-container row">
                 <h1 className="col-12">Registration</h1>
-                <div className={"col-md-6 col-12"}>
+                <Row className={"col-md-6 col-12"}>
                     <label className="col-form-label">Name *</label>
                     <input type="text" className="form-control"
                         onChange={i => this.setState(prev => ({ customer: { ...prev.customer, name: i.target.value }}))} />
-                </div>
+                </Row>
 
-                <div className={"col-md-6 col-12"}>
+                <Row className={"col-md-6 col-12"}>
                     <label className="col-form-label">Surname * </label>
                     <input type="text" className="form-control"
                         onChange={i => this.setState(prev => ({ customer: { ...prev.customer, surname: i.target.value } }))} />
-                </div>
+                </Row>
 
-                <div className={"col-12"}>
+                <Row className={"col-12"}>
                     <label className="col-form-label">Phone Number </label>
                     <input type="text" className="form-control"
                         onChange={i => this.setState(prev => ({ customer: { ...prev.customer, phoneNumber: i.target.value } }))} />
-                </div>
+                </Row>
 
-                <div className={"col-12"}>
+                <Row className={"col-12"}>
                     <label className="col-form-label">Email *</label>
                     <input type="text" className="form-control"
                         onChange={i => this.setState(prev => ({ customer: { ...prev.customer, email: i.target.value } }))} />
-                </div>
-                <div className={" col-12"}>
+                </Row>
+                <Row className={" col-12"}>
                     <label className="col-form-label">Password *</label>
                     <input type="password" className="form-control" defaultValue={this.state.customer.password}
                         onChange={i => this.setState(prev => ({ customer: { ...prev.customer, password: i.target.value } }))} />
-                </div>
-                <div className={" col-12"}>
+                </Row>
+                <Row className={" col-12"}>
                     <label className="col-form-label">Confirm Password * </label>
                     <input type="password" className="form-control" defaultValue={this.state.customer.confirmPassword}
                         onChange={i => this.setState(prev => ({ customer: { ...prev.customer, confirmPassword: i.target.value } }))} />
-                </div>
-                <div className={"col-12 mt-2 mb-1"}>
+                </Row>
+                <Row className={"col-12 mt-2 mb-1"}>
                     <input className="custom-checkbox" type="checkbox"
                         onChange={i => this.setState((prev) => ({ customer: { ...prev.customer, termsAndCondition: !prev.customer.termsAndCondition } }))} />
-                    <span>
+                    <Row>
                         Agree to our <Link to="/TermsAndConditions">Terms and Conditions</Link>
-                    </span>
-                </div>
-                <div className={"col-12"}>
+                    </Row>
+                </Row>
+                <Row className={"col-12"}>
                     {this.state.errors.map(err =>
-                        <div key={err.id} className={"text-danger"}>* {err.message}</div>
+                        <Row key={err.id} className={"text-danger"}>* {err.message}</Row>
                     )}
-                </div>
-                <div className={"col-12"}>
+                </Row>
+                <Row className={"col-12"}>
                     <button type="submit" className="btn btn-lg btn-green col m-1"
                         onClick={this.SubmitNewUser}>
                         Create
                     </button>
-                </div>
+                </Row>
             </Container>
         );
     }

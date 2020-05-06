@@ -53,7 +53,7 @@ namespace OSnack.Web.Api.AppSettings.AppModels
                     }
                     return true;
                 }
-                catch (Exception eeee)
+                catch (Exception)
                 {
                     return false;
                 }

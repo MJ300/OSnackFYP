@@ -3,7 +3,7 @@
   <Class Name="OSnack.Web.Api.Database.Models.oAddress">
     <Position X="4.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACEDAAAAAAAAAAAIAAAAgAQAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <HashCode>ACEDAAAAAAAAAAAIAAAAgAwAAAAAAAACAAAAAAAAAAA=</HashCode>
       <FileName>Database\Models\oAddress.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -18,9 +18,15 @@
     </TypeIdentifier>
   </Class>
   <Class Name="OSnack.Web.Api.Database.Models.oCategory">
-    <Position X="13.25" Y="5.75" Width="1.5" />
+    <Position X="13.5" Y="7.25" Width="1.5" />
+    <Members>
+      <Field Name="_Name" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAACAAAIAQAAAAAAIAAAIIQAAAAAAAAgAAAAAAAAAAQ=</HashCode>
+      <HashCode>ABACAAAMAQAAAAAAIAAAIIQAAAAAAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>Database\Models\oCategory.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -49,9 +55,9 @@
     <AssociationLine Name="OrderItems" Type="OSnack.Web.Api.Database.Models.oOrderItem" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="8.75" Y="4.815" />
-        <Point X="9.517" Y="4.815" />
-        <Point X="9.517" Y="2.125" />
-        <Point X="10.5" Y="2.125" />
+        <Point X="9.125" Y="4.815" />
+        <Point X="9.125" Y="2.077" />
+        <Point X="10.5" Y="2.077" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
@@ -67,39 +73,38 @@
   </Class>
   <Class Name="OSnack.Web.Api.Database.Models.oOrderItem">
     <Position X="10.5" Y="1.75" Width="1.5" />
-    <AssociationLine Name="Product" Type="OSnack.Web.Api.Database.Models.oProduct" FixedToPoint="true">
-      <Path>
-        <Point X="10.812" Y="3.046" />
-        <Point X="10.812" Y="4.75" />
-      </Path>
-    </AssociationLine>
-    <AssociationLine Name="Scores" Type="OSnack.Web.Api.Database.Models.oScore" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="12" Y="2.73" />
-        <Point X="12.375" Y="2.73" />
-        <Point X="12.375" Y="3.898" />
-        <Point X="13.25" Y="3.898" />
-      </Path>
-    </AssociationLine>
     <AssociationLine Name="Order" Type="OSnack.Web.Api.Database.Models.oOrder" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="10.5" Y="2.562" />
-        <Point X="9.982" Y="2.562" />
+        <Point X="10.5" Y="2.457" />
+        <Point X="9.982" Y="2.457" />
         <Point X="9.982" Y="5.312" />
         <Point X="8.75" Y="5.312" />
       </Path>
     </AssociationLine>
+    <AssociationLine Name="StoreProduct" Type="OSnack.Web.Api.Database.Models.oStoreProduct">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.1" Y="0.06" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Scores" Type="OSnack.Web.Api.Database.Models.oScore" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="12" Y="2.603" />
+        <Point X="12.375" Y="2.603" />
+        <Point X="12.375" Y="3.898" />
+        <Point X="13.25" Y="3.898" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAECAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAgAAAIAA=</HashCode>
+      <HashCode>EAECCAAAAAAAAAgAAAAAEAAAAAAAAAAAAAAAgAAAIAA=</HashCode>
       <FileName>Database\Models\oOrderItem.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Product" />
       <Property Name="Order" />
+      <Property Name="StoreProduct" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="Scores" />
       <Property Name="Comments" />
+      <Property Name="Scores" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="OSnack.Web.Api.Database.Models.oPayment">
@@ -110,69 +115,121 @@
     </TypeIdentifier>
   </Class>
   <Class Name="OSnack.Web.Api.Database.Models.oProduct">
-    <Position X="10.5" Y="4.75" Width="1.5" />
-    <AssociationLine Name="OrderItems" Type="OSnack.Web.Api.Database.Models.oOrderItem" FixedToPoint="true">
+    <Position X="10.25" Y="7.5" Width="1.5" />
+    <AssociationLine Name="StoreProducts" Type="OSnack.Web.Api.Database.Models.oStoreProduct" FixedFromPoint="true">
       <Path>
-        <Point X="11.375" Y="4.75" />
-        <Point X="11.375" Y="3.046" />
+        <Point X="11.125" Y="7.5" />
+        <Point X="11.125" Y="6.68" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-1.025" Y="0.195" />
+        <Position X="-1.171" Y="0.143" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>ABACAAAAAQEgAAAAIAAAAYUAAAAAAAAgAAAAAAAAKAA=</HashCode>
+      <HashCode>ABACAAAAAQAgAAAAIAAAAIUAAAAAAAAAAAAAAQAAKAA=</HashCode>
       <FileName>Database\Models\oProduct.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Category" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="OrderItems" />
-      <Property Name="StorageItems" />
+      <Property Name="StoreProducts" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="OSnack.Web.Api.Database.Models.oScore">
     <Position X="13.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAgAAAQAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Database\Models\oScore.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OSnack.Web.Api.Database.Models.oStorage">
-    <Position X="5.5" Y="8.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAAAAQQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Database\Models\oStorage.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="StorageItems" />
-    </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="OSnack.Web.Api.Database.Models.oStorageItem">
-    <Position X="8.25" Y="8.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>EAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Database\Models\oStorageItem.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OSnack.Web.Api.Database.Models.oToken">
     <Position X="4.75" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAADAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAgAAAAEAA=</HashCode>
+      <HashCode>AAADAAAAACAAAAAAAAAAAAAAAAAAAAAACAAgAAAAEAA=</HashCode>
       <FileName>Database\Models\oToken.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OSnack.Web.Api.Database.Models.oUser">
     <Position X="1.5" Y="1.5" Width="2" />
+    <Members>
+      <Method Name="oUser" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AADAAEAABCAAIEAIGBAgQAABRAAAAAAKAQAABAABAQA=</HashCode>
+      <HashCode>AADAAEAABCAAIEAIEAAgQAABRAAAAAAKAQAABAAACQA=</HashCode>
       <FileName>Database\Models\oUser.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Role" />
+    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="AppLogs" />
-      <Property Name="Tokens" />
       <Property Name="Addresses" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="OSnack.Web.Api.Database.Models.oStoreProduct">
+    <Position X="10.25" Y="5" Width="1.5" />
+    <AssociationLine Name="Product" Type="OSnack.Web.Api.Database.Models.oProduct" FixedFromPoint="true">
+      <Path>
+        <Point X="10.812" Y="6.68" />
+        <Point X="10.812" Y="7.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.074" Y="0.06" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Store" Type="OSnack.Web.Api.Database.Models.oStore" FixedToPoint="true">
+      <Path>
+        <Point X="11.75" Y="6.188" />
+        <Point X="13.25" Y="6.188" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.086" Y="0.06" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>EAACAAAEAAAAAAAAAAAAEAAAAAAAAAAAAAAAgQAAAAA=</HashCode>
+      <FileName>Database\Models\oStoreProduct.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Product" />
+      <Property Name="Store" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="OSnack.Web.Api.Database.Models.oStore">
+    <Position X="13.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAEAAAAAAAAAAAAAAQAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Database\Models\oStore.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="StoreProducts" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="OSnack.Web.Api.Database.Models.oNewsletterSubscription">
+    <Position X="3.5" Y="8.25" Width="2" />
+    <Members>
+      <Method Name="oNewsletterSubscription" Hidden="true" />
+      <Method Name="SetToken" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>ABAAEAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Database\Models\oNewsletterSubscription.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OSnack.Web.Api.Database.Models.oRole">
+    <Position X="4.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACACAAAAAAAAAAAAACAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Database\Models\oRole.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Users" />
     </ShowAsCollectionAssociation>
   </Class>
   <Font Name="Segoe UI" Size="9" />

@@ -1,0 +1,114 @@
+﻿a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+.hideMe {
+    display: none;
+    position: absolute;
+}
+
+.navbar-toggler {
+    padding: 0;
+    font-size: 1.25rem;
+    line-height: 1;
+    background-color: transparent;
+    border: 0 !important;
+    border-radius: 0px !important;
+    text-decoration-color: black;
+    outline: none !important;
+}
+
+.navbar-toggler-icon {
+    position: relative;
+    z-index: 1000;
+}
+
+.logo-container {
+    width: 177.31px !important;
+    height: 70px !important;
+}
+
+.Logo, .Logo:active {
+    max-height: 150%;
+    transition: 1000ms;
+}
+
+    .Logo:hover {
+        transform: rotate(-360deg);
+        transition: 3000ms cubic-bezier(0.28,-0.61, 0.64, 2.12) transform 5000ms;
+    }
+
+.Logo-sm {
+    position: relative;
+    z-index: 1000;
+    top: 0;
+    bottom: 0;
+    max-height: 40px;
+    background-color: transparent !important;
+}
+
+.nav-text-container {
+    text-align: center;
+    float: none;
+    padding-top: 1rem;
+    font-weight: bold;
+    border-bottom: solid 0.6rem rgba(61, 95, 9, 0.20);
+}
+
+.text-nav {
+    color: rgba(40, 62, 8, 0.75) !important;
+    font-weight: bold;
+    text-align: center center;
+    transition: 1s;
+}
+
+@media(max-width:850px) {
+    @media(min-width:760px) {
+        .text-nav {
+            font-size: small;
+        }
+    }
+}
+
+.text-nav:hover, text-nav:focus {
+    background-color: rgba(40, 62, 8, 0.10) !important;
+    overflow: visible;
+    transition: 1s;
+}
+
+@media (min-width:760px) {
+    .word-break {
+        max-width: 125px;
+    }
+}
+
+.no-list-style {
+    list-style-type: none;
+}
+
+.text-underline {
+    text-decoration-line: underline !important;
+}
+
+@media (max-width:575px) {
+    .dropdown-span {
+        background-color: transparent;
+        border: none;
+    }
+}

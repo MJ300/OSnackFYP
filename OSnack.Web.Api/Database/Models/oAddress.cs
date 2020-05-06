@@ -1,12 +1,15 @@
 ﻿using Newtonsoft.Json;
+using OSnack.Web.Api.Controllers;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OSnack.Web.Api.Database.Models
 {
+    [Table("Addresses")]
     public class oAddress
     {
+        [Key]
         public int Id { get; set; }
 
         [Column(TypeName = "nvarchar(256)")]
@@ -36,6 +39,8 @@ namespace OSnack.Web.Api.Database.Models
         [Required(ErrorMessage = "User is Required \n")]
         [JsonIgnore]
         public oUser User { get; set; }
+
+        [InverseProperty("Address")]
         public ICollection<oOrder> Orders { get; set; }
 
         [NotMapped]

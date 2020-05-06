@@ -49,19 +49,19 @@ class ForgotPassword extends React.PureComponent {
         return (
             <Container className="custom-fluid-container row">
                 <h1 className="col-12">Forgot Password?</h1>
-                <div className={"col-12"}>
+                <Row className={"col-12"}>
                     <label className="col-form-label">Email *
                          <label className="col-form-label text-danger">{this.state.response.message}</label>
                     </label>
                     <input type="text" className="form-control"
                         onChange={i => this.setState({ email: i.target.value })} />
-                </div>
-                <div className={"col-12 mt-2"}>
+                </Row>
+                <Row className={"col-12 mt-2"}>
                     <button type="submit" className="btn btn-lg btn-green col m-1"
                         onClick={this.passwordReset}>
                         Submit
                     </button>
-                </div>
+                </Row>
             </Container>
         );
     }

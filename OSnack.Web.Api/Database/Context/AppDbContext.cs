@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Esf;
 using OSnack.Web.Api.Database.Models;
 
 namespace OSnack.Web.Api.Database.Context
@@ -22,12 +21,13 @@ namespace OSnack.Web.Api.Database.Context
         public DbSet<oToken> Tokens { get; set; }
         public DbSet<oCoupon> Coupons { get; set; }
         public DbSet<oAppLog> AppLogs { get; set; }
-        public DbSet<oStorage> Storages { get; set; }
-        public DbSet<oStorageItem> StorageItems { get; set; }
+        public DbSet<oStore> Stores { get; set; }
+        public DbSet<oStoreProduct> StoreProducts { get; set; }
         public DbSet<oComment> Comments { get; set; }
         public DbSet<oScore> Scores { get; set; }
         public DbSet<oNewsletterSubscription> NewsletterSubscriptions { get; set; }
-        
+        public DbSet<oRole> Roles { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -39,15 +39,19 @@ namespace OSnack.Web.Api.Database.Context
             #endregion
 
             #region *** Change table names ***
-            builder.Entity<oUser>().ToTable("Users");
             builder.Entity<IdentityUserClaim<int>>().ToTable("AccessClaims");
+            builder.Entity<oUser>().ToTable("Users");
             #endregion
 
             builder.Entity<IdentityUserClaim<int>>().Ignore("Id");
             builder.Entity<IdentityUserClaim<int>>().HasKey("UserId");
 
-            builder.Entity<oStorageItem>().HasKey(si => new { si.ProductId, si.StorageId });
-            builder.Entity<oScore>().HasKey(s => new { s.OrderItemId });
+            builder.Entity<oStoreProduct>().HasKey(si => new { si.StoreId, si.ProductId });
+
+            builder.Entity<oStore>().HasIndex(s => s.Name).IsUnique();
+            builder.Entity<oCategory>().HasIndex(c => c.Name).IsUnique();
+            builder.Entity<oProduct>().HasIndex(p => p.Name).IsUnique();
+
 
             builder.Entity<oUser>().Ignore(u => u.UserName);
             builder.Entity<oUser>().Ignore(u => u.NormalizedUserName);

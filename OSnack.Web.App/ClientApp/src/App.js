@@ -25,7 +25,7 @@ import CustomRoute from './components/_Main/CustomRoute';
 const App = () => {
     alert(test)
     return (
-        <div>
+        <Row>
             <NavMenu />
             <Container >
                 <Switch>
@@ -42,7 +42,7 @@ const App = () => {
                 </Switch>
             </Container>
             <Footer />
-        </div>
+        </Row>
     );
 }
 export default App;

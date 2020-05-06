@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OSnack.Web.Api.AppModels;
 using OSnack.Web.Api.AppSettings;
 using OSnack.Web.Api.Database.Context;
 using OSnack.Web.Api.Database.Models;
@@ -10,10 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using static OSnack.Web.Api.AppSettings.oAppFunc;
 
 namespace OSnack.Web.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class AddressController : ControllerBase
     {
         private AppDbContext DbContext { get; }
@@ -40,12 +40,12 @@ namespace OSnack.Web.Api.Controllers
             try
             {
                 /// return the list of User's Address 
-                return Ok(DbContext.Addresses.Where(t=>t.User.Id==userId));
+                return Ok(DbContext.Addresses.Where(t => t.User.Id == userId));
             }
             catch (Exception) //ArgumentNullException
             {
                 /// in the case any exceptions return the following error
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -68,7 +68,7 @@ namespace OSnack.Web.Api.Controllers
                 /// if model validation failed
                 if (!TryValidateModel(newAddress))
                 {
-                    oAppConst.ExtractErrors(ModelState, ref ErrorsList);
+                    oAppFunc.ExtractErrors(ModelState, ref ErrorsList);
                     /// return Unprocessable Entity with all the errors
                     return UnprocessableEntity(ErrorsList);
                 }
@@ -86,7 +86,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
             {
                 /// Add the error below to the error list and return bad request
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -109,7 +109,7 @@ namespace OSnack.Web.Api.Controllers
                 /// if model validation failed
                 if (!TryValidateModel(modifiedAddress))
                 {
-                    oAppConst.ExtractErrors(ModelState, ref ErrorsList);
+                    oAppFunc.ExtractErrors(ModelState, ref ErrorsList);
                     /// return Unprocessable Entity with all the errors
                     return UnprocessableEntity(ErrorsList);
                 }
@@ -126,7 +126,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
             {
                 /// Add the error below to the error list and return bad request
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -149,7 +149,7 @@ namespace OSnack.Web.Api.Controllers
                 /// if the Address record with the same id is not found
                 if (!await DbContext.Addresses.AnyAsync(d => d.Id == address.Id).ConfigureAwait(false))
                 {
-                    oAppConst.Error(ref ErrorsList, "Category not found");
+                    oAppFunc.Error(ref ErrorsList, "Category not found");
                     return NotFound(ErrorsList);
                 }
 
@@ -163,7 +163,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception)
             {
                 /// Add the error below to the error list
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }

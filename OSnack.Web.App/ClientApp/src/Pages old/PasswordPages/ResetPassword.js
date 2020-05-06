@@ -79,25 +79,25 @@ class PasswordReset extends React.PureComponent {
         return (
             <Container className="custom-fluid-container row">
                 <h1 className="col-12">Reset Password</h1>
-                <div className={" col-12"}>
+                <Row className={" col-12"}>
                     <label className="col-form-label">Password *</label>
                     <input type="password" className="form-control" defaultValue={this.state.passReset.password}
                         onChange={i => this.setState(prev => ({ passReset: {...prev.passReset, password: i.target.value }}))} />
-                </div>
-                <div className={" col-12"}>
+                </Row>
+                <Row className={" col-12"}>
                     <label className="col-form-label">Confirm Password * </label>
                     <input type="password" className="form-control" defaultValue={this.state.passReset.confirmPassword}
                         onChange={i => this.setState(prev => ({ passReset: { ...prev.passReset, confirmPassword: i.target.value } }))} />
-                </div>
-                <div className={"col-12"}>
+                </Row>
+                <Row className={"col-12"}>
                     <label className="col-form-label text-danger">{this.state.response.message}</label>
-                </div>
-                <div className={"col-12"}>
+                </Row>
+                <Row className={"col-12"}>
                     <button type="submit" className="btn btn-lg btn-green col m-1"
                         onClick={this.resetPassword}>
                         Submit
                     </button>
-                </div>
+                </Row>
             </Container>
         );
     }

@@ -63,12 +63,12 @@ class Shop extends React.Component {
         if (this.state.products.length > 0) {
             return (
                 <Container >
-                    <div className="row justify-content-center text-center">
+                    <Row className="row justify-content-center text-center">
                         <Link className="breadcrumb-item text-black-50 text-centre" to={window.location.pathname}>
                             <h1 className="font-weight-bold">{this.state.selectedCategory}</h1>
                         </Link>
-                    </div>
-                    <div className="row mt-0 mb-4 justify-content-center">
+                    </Row>
+                    <Row className="row mt-0 mb-4 justify-content-center">
                         {this.state.products.map(product => {
                             {
                                 if ((!!this.props.order.products.find((i) => i.id == product.id))) {
@@ -80,10 +80,10 @@ class Shop extends React.Component {
                                 }
                             }
                             return (
-                                <div key={product.id} className="removeUnderline p-0 mb-4 shop-card-product">
-                                    <div className="shop-card p-0">
+                                <Row key={product.id} className="removeUnderline p-0 mb-4 shop-card-product">
+                                    <Row className="shop-card p-0">
                                         <img className="img-fluid shop-card-img" src={product.imagePath} alt={product.name} />
-                                        <div className="shop-card-quantity" >
+                                        <Row className="shop-card-quantity" >
                                             <input className="col-4 m-0 border-0 bg-white text-center" defaultValue={product.orderQuantity} type="text" />
                                             <button type="button" className="col-3 border-0 m-0 text-center bg-danger"
                                                 onClick={() => { product.orderQuantity = - 1 }}>
@@ -98,17 +98,17 @@ class Shop extends React.Component {
                                                 }}>
                                                 <font className="text-white font-weight-bold m-0" >+</font>
                                             </button>
-                                        </div>
-                                    </div>
-                                    <div>
+                                        </Row>
+                                    </Row>
+                                    <Row>
                                         <h4 className="font-weight-bold">{product.name}</h4>
                                         <h5>£<font>{product.price}</font> {product.unitQuantity} {product.unit}</h5>
                                         <p>{product.description}</p>
-                                    </div>
-                                </div>
+                                    </Row>
+                                </Row>
                             )
                         })}
-                    </div>
+                    </Row>
                 </Container>
             )
         }  
@@ -117,16 +117,16 @@ class Shop extends React.Component {
         if (this.state.loading)
             return (<Loading />);
         return (
-            <div>
+            <Row>
                 {this.renderProducts()}
                 <Container className={this.state.hideCategory ? "hideMe" : "showMe"}>
-                    <div className="row justify-content-center text-center">
+                    <Row className="row justify-content-center text-center">
                         <Link className="breadcrumb-item text-black-50 text-centre" to="/Shop">
                             <h1 className="font-weight-bold">Product Categories</h1>
                         </Link>
-                    </div>
+                    </Row>
 
-                    <div className="row mt-0 mb-4 justify-content-center">
+                    <Row className="row mt-0 mb-4 justify-content-center">
                         {this.state.categories.map(category => {
                             console.log(category.nam)
                             let cssClass = ""
@@ -141,9 +141,9 @@ class Shop extends React.Component {
                                 </Link>
                             )
                         })}
-                    </div>
+                    </Row>
                 </Container>
-            </div>
+            </Row>
         );
     }
 }

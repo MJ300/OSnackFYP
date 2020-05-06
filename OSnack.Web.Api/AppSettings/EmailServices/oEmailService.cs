@@ -67,8 +67,8 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
             {
                 /// Create the URL for the user to go to in order to reset their password
                 string PasswordResetUrl = await GetUrlWithToken(
-                    user, 
-                    TokenType.ResetPassword, 
+                    user,
+                    TokenType.ResetPassword,
                     ExpiaryDate).ConfigureAwait(false);
 
                 /// The following methods must be called in order to create the email. 
@@ -85,7 +85,7 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
 
                 /// pass the information to be used to send the email.
                 await SendEmailAsync(user.Email, "Password Reset", htmlMessage).ConfigureAwait(false);
-                
+
                 /// if all goes well then return true
                 return true;
             }
@@ -144,7 +144,7 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
                 await DbContext.AppLogs.AddAsync(new oAppLog
                 {
                     Massage = err.Message,
-                    JsonObject=JsonConvert.SerializeObject(err),
+                    JsonObject = JsonConvert.SerializeObject(err),
                     User = user
                 });
                 await DbContext.SaveChangesAsync();
@@ -250,7 +250,7 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
         {
             /// First check if the user has a token for the requested token type
             IEnumerable<oToken> tokenValues = DbContext.Tokens
-                .Where(vs => vs.UserId == user.Id && vs.ValueType == requestType)
+                .Where(vs => vs.User.Id == user.Id && vs.ValueType == requestType)
                 .AsNoTracking()
                 .AsEnumerable();
 
@@ -258,11 +258,11 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
             /// then remove all of them
             if (tokenValues != null)
                 DbContext.Tokens.RemoveRange(tokenValues);
-            
+
             /// Create a new token
             var token = new oToken
             {
-                UserId = user.Id,
+                User = user,
                 ValueType = requestType,
                 ExpiaryDateTime = ExpiaryDate,
                 Value = Guid.NewGuid().ToString().Replace("-", "")

@@ -6,8 +6,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OSnack.Web.Api.Database.Models
 {
+    [Table("Orders")]
     public class oOrder
     {
+        [Key]
         public int Id { get; set; }
 
         [Column(TypeName = "nvarchar(30)")]
@@ -22,13 +24,17 @@ namespace OSnack.Web.Api.Database.Models
         public decimal TotalPrice { get; set; }
 
         [Required(ErrorMessage = "Address is required \n")]
+        [ForeignKey("AddressId")]
         public oAddress Address { get; set; }
 
         [Required(ErrorMessage = "Payment is required \n")]
-        [ForeignKey("Id")]
+        [ForeignKey("PaymentId")]
         public oPayment Payment { get; set; }
 
+        [ForeignKey("Code")]
         public oCoupon Coupon { get; set; }
+
+        [InverseProperty("Order")]
         public ICollection<oOrderItem> OrderItems { get; set; }
 
     }

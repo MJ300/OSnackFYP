@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OSnack.Web.Api.AppModels;
+
 using OSnack.Web.Api.AppSettings;
 using OSnack.Web.Api.Database.Context;
 using OSnack.Web.Api.Database.Models;
@@ -10,10 +10,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using static OSnack.Web.Api.AppSettings.oAppFunc;
 
 namespace OSnack.Web.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class ProductController : ControllerBase
     {
 
@@ -46,7 +47,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) //ArgumentNullException
             {
                 /// in the case any exceptions return the following error
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -70,7 +71,7 @@ namespace OSnack.Web.Api.Controllers
                 /// if model validation failed
                 if (!TryValidateModel(newProduct))
                 {
-                    oAppConst.ExtractErrors(ModelState, ref ErrorsList);
+                    oAppFunc.ExtractErrors(ModelState, ref ErrorsList);
                     /// return Unprocessable Entity with all the errors
                     return UnprocessableEntity(ErrorsList);
                 }
@@ -79,14 +80,14 @@ namespace OSnack.Web.Api.Controllers
                 if (!await DbContext.Products.AnyAsync(d => d.Name == newProduct.Name).ConfigureAwait(false))
                 {
                     /// extract the errors and return bad request containing the errors
-                    oAppConst.Error(ref ErrorsList, "Product already exists.");
+                    oAppFunc.Error(ref ErrorsList, "Product already exists.");
                     return StatusCode(412, ErrorsList);
                 }
 
                 /// Add the new Product to the EF context
                 await DbContext.Products.AddAsync(newProduct).ConfigureAwait(false);
 
-                //TODO : Save Image Byte Into Media Api
+                //TODO : Save Image Byte Into Media 
 
                 /// save the changes to the data base
                 await DbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -98,7 +99,59 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
             {
                 /// Add the error below to the error list and return bad request
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                return StatusCode(417, ErrorsList);
+            }
+        }
+
+
+        /// <summary>
+        ///     Create/ update a new Score
+        /// </summary>
+        #region *** 201 Created, 400 BadRequest, 422 UnprocessableEntity, 412 PreconditionFailed, 417 ExpectationFailed ***
+        [HttpPost("[action]/Score")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
+        [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
+        #endregion
+        // [Authorize(oAppConst.AccessPolicies.LevelTwo)]  /// Ready For Test
+        public async Task<IActionResult> Post([FromBody] oScore newScore)
+        {
+            try
+            {
+                /// if model validation failed
+                if (!TryValidateModel(newScore))
+                {
+                    oAppFunc.ExtractErrors(ModelState, ref ErrorsList);
+                    /// return Unprocessable Entity with all the errors
+                    return UnprocessableEntity(ErrorsList);
+                }
+
+                ///// check the database to see if a Score with the same name exists
+                //if (!await DbContext.Categories.AnyAsync(d => d.Name == newRole.Name).ConfigureAwait(false))
+                //{
+                //    /// extract the errors and return bad request containing the errors
+                //    oAppFunc.Error(ref ErrorsList, "Role already exists.");
+                //    return StatusCode(412, ErrorsList);
+                //}
+
+                /// else score object is made without any errors
+                /// Add the new score to the EF context
+                await DbContext.Scores.AddAsync(newScore).ConfigureAwait(false);
+
+                /// save the changes to the data base
+                await DbContext.SaveChangesAsync().ConfigureAwait(false);
+
+                /// return 201 created status with the new object
+                /// and success message
+                return Created("Success", newScore);
+            }
+            catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
+            {
+                /// Add the error below to the error list and return bad request
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -122,7 +175,7 @@ namespace OSnack.Web.Api.Controllers
                 /// if model validation failed
                 if (!TryValidateModel(modifiedProduct))
                 {
-                    oAppConst.ExtractErrors(ModelState, ref ErrorsList);
+                    oAppFunc.ExtractErrors(ModelState, ref ErrorsList);
                     /// return Unprocessable Entity with all the errors
                     return UnprocessableEntity(ErrorsList);
                 }
@@ -131,11 +184,11 @@ namespace OSnack.Web.Api.Controllers
                 if (!await DbContext.Products.AnyAsync(d => d.Name == modifiedProduct.Name).ConfigureAwait(false))
                 {
                     /// extract the errors and return bad request containing the errors
-                    oAppConst.Error(ref ErrorsList, "Product already exists.");
+                    oAppFunc.Error(ref ErrorsList, "Product already exists.");
                     return StatusCode(412, ErrorsList);
                 }
 
-                //TODO : Save Image Byte Into Media Api
+                //TODO : Save Image Byte Into Media 
 
 
                 /// Update the current Product to the EF context
@@ -150,7 +203,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
             {
                 /// Add the error below to the error list and return bad request
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -174,18 +227,18 @@ namespace OSnack.Web.Api.Controllers
                 /// if the Product record with the same id is not found
                 if (!await DbContext.Categories.AnyAsync(d => d.Id == product.Id).ConfigureAwait(false))
                 {
-                    oAppConst.Error(ref ErrorsList, "Product not found");
+                    oAppFunc.Error(ref ErrorsList, "Product not found");
                     return NotFound(ErrorsList);
                 }
 
                 /// If the Product is in use by any OrdersItems then do not allow delete
-                if (await DbContext.OrdersItems.AnyAsync(c => c.Product.Id == product.Id).ConfigureAwait(false))
+                if (await DbContext.OrdersItems.AnyAsync(c => c.StoreProduct.Product.Id == product.Id).ConfigureAwait(false))
                 {
-                    oAppConst.Error(ref ErrorsList, "Product is in use by at least one Orders Items.");
+                    oAppFunc.Error(ref ErrorsList, "Product is in use by at least one Orders Items.");
                     return StatusCode(412, ErrorsList);
                 }
 
-                //TODO : Delete Image from Media Api
+                //TODO : Delete Image from Media API
 
                 /// now delete the Product record
                 DbContext.Products.Remove(product);
@@ -197,7 +250,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception)
             {
                 /// Add the error below to the error list
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }

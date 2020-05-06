@@ -13,14 +13,17 @@ namespace OSnack.Web.Api.AppSettings.CustomAttributes
         /// <param name="value">The value object to be checked</param>
         public override bool IsValid(object value)
         {
-            /// if the value is not null and if the object correctly converted to a decimal
-            if (value != null 
-                && decimal.TryParse((string)value, out decimal num))
+            try
             {
-                /// then check if the converted value is more than or equal to 0
-                /// then return true
-                if (num >= 0) return true;
+                /// if the value is not null and if the object correctly converted to a decimal
+                if (value != null)
+                {
+                    /// then check if the converted value is more than or equal to 0
+                    /// then return true
+                    if ((decimal)value >= 0) return true;
+                }
             }
+            catch { }
             /// else display below error massage and return false
             ErrorMessage = "Invalid Price";
             return false;

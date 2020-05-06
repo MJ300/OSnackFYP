@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSnack.Web.Api", "OSnack.We
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSnack.Web.App", "OSnack.Web.App\OSnack.Web.App.csproj", "{099B26C9-BC4C-4CAD-B49D-2CB4DFDC819D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSnack.Web.Media.Api", "OSnack.Web.Media.Api\OSnack.Web.Media.Api.csproj", "{4B5986BA-D0F0-46C4-9D6B-4E5CE17F81A6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSnack.Web.App.Management", "OSnack.Web.App.Management\OSnack.Web.App.Management.csproj", "{BE13E202-C677-4B19-A6CF-C63512A88E89}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSnack.Web.App.Epos", "OSnack.Web.App.Epos\OSnack.Web.App.Epos.csproj", "{F0CF5153-4315-4164-BB01-98001900BD7C}"
@@ -19,66 +17,101 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared.Items", "Shared.Item
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommonJs", "CommonJs", "{EE3E09B8-FCD4-436C-A4C6-A2E99A284AF0}"
 	ProjectSection(SolutionItems) = preProject
-		Shared.Items\CommonJs\AppConst.Shared.js = Shared.Items\CommonJs\AppConst.Shared.js
-		Shared.Items\CommonJs\AppFunc.Shared.js = Shared.Items\CommonJs\AppFunc.Shared.js
-		Shared.Items\CommonJs\CustomRoute.js = Shared.Items\CommonJs\CustomRoute.js
-		Shared.Items\CommonJs\Models-OSnack.js = Shared.Items\CommonJs\Models-OSnack.js
-		Shared.Items\CommonJs\ProtectedRoute.js = Shared.Items\CommonJs\ProtectedRoute.js
+		Shared.Items\src\_CoreFiles\CommonJs\AppConst.Shared.js = Shared.Items\src\_CoreFiles\CommonJs\AppConst.Shared.js
+		Shared.Items\src\_CoreFiles\CommonJs\AppFunc.Shared.js = Shared.Items\src\_CoreFiles\CommonJs\AppFunc.Shared.js
+		Shared.Items\src\_CoreFiles\CommonJs\CustomRoute.js = Shared.Items\src\_CoreFiles\CommonJs\CustomRoute.js
+		Shared.Items\src\_CoreFiles\CommonJs\Models-OSnack.js = Shared.Items\src\_CoreFiles\CommonJs\Models-OSnack.js
+		Shared.Items\src\_CoreFiles\CommonJs\ProtectedRoute.js = Shared.Items\src\_CoreFiles\CommonJs\ProtectedRoute.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{337D4DBB-F89B-433D-8933-C678D6AB708B}"
 	ProjectSection(SolutionItems) = preProject
-		Shared.Items\Images\favicon.ico = Shared.Items\Images\favicon.ico
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OSnackCore", "OSnackCore", "{712C5F06-42A0-4E65-931A-F567DDD0B2D0}"
-	ProjectSection(SolutionItems) = preProject
-		Shared.Items\Images\OSnackCore\ApplePay.png = Shared.Items\Images\OSnackCore\ApplePay.png
-		Shared.Items\Images\OSnackCore\BestSellerTag.png = Shared.Items\Images\OSnackCore\BestSellerTag.png
-		Shared.Items\Images\OSnackCore\BlankImg.png = Shared.Items\Images\OSnackCore\BlankImg.png
-		Shared.Items\Images\OSnackCore\CardPay.png = Shared.Items\Images\OSnackCore\CardPay.png
-		Shared.Items\Images\OSnackCore\ExtraInfo.png = Shared.Items\Images\OSnackCore\ExtraInfo.png
-		Shared.Items\Images\OSnackCore\FastDelivery.png = Shared.Items\Images\OSnackCore\FastDelivery.png
-		Shared.Items\Images\OSnackCore\GooglePay.png = Shared.Items\Images\OSnackCore\GooglePay.png
-		Shared.Items\Images\OSnackCore\LoadSpinner.gif = Shared.Items\Images\OSnackCore\LoadSpinner.gif
-		Shared.Items\Images\OSnackCore\Logo.png = Shared.Items\Images\OSnackCore\Logo.png
-		Shared.Items\Images\OSnackCore\Logo.svg = Shared.Items\Images\OSnackCore\Logo.svg
-		Shared.Items\Images\OSnackCore\MangoMenu.png = Shared.Items\Images\OSnackCore\MangoMenu.png
-		Shared.Items\Images\OSnackCore\MintOliveBG.jpg = Shared.Items\Images\OSnackCore\MintOliveBG.jpg
-		Shared.Items\Images\OSnackCore\QualityFood.png = Shared.Items\Images\OSnackCore\QualityFood.png
-		Shared.Items\Images\OSnackCore\Satisfactionpng.png = Shared.Items\Images\OSnackCore\Satisfactionpng.png
-		Shared.Items\Images\OSnackCore\ShoppingCart.png = Shared.Items\Images\OSnackCore\ShoppingCart.png
-		Shared.Items\Images\OSnackCore\stand.png = Shared.Items\Images\OSnackCore\stand.png
+		Shared.Items\Public\Images\ApplePay.png = Shared.Items\Public\Images\ApplePay.png
+		Shared.Items\Public\Images\BestSellerTag.png = Shared.Items\Public\Images\BestSellerTag.png
+		Shared.Items\Public\Images\BlankImg.png = Shared.Items\Public\Images\BlankImg.png
+		Shared.Items\Public\Images\CardPay.png = Shared.Items\Public\Images\CardPay.png
+		Shared.Items\Public\Images\ExtraInfo.png = Shared.Items\Public\Images\ExtraInfo.png
+		Shared.Items\Public\Images\FastDelivery.png = Shared.Items\Public\Images\FastDelivery.png
+		Shared.Items\Public\Images\GooglePay.png = Shared.Items\Public\Images\GooglePay.png
+		Shared.Items\Public\Images\IdkFace(Mango).png = Shared.Items\Public\Images\IdkFace(Mango).png
+		Shared.Items\Public\Images\LoadSpinner.gif = Shared.Items\Public\Images\LoadSpinner.gif
+		Shared.Items\Public\Images\Logo.png = Shared.Items\Public\Images\Logo.png
+		Shared.Items\Public\Images\Logo.svg = Shared.Items\Public\Images\Logo.svg
+		Shared.Items\Public\Images\MangoMenu.png = Shared.Items\Public\Images\MangoMenu.png
+		Shared.Items\Public\Images\MintOliveBG.jpg = Shared.Items\Public\Images\MintOliveBG.jpg
+		Shared.Items\Public\Images\QualityFood.png = Shared.Items\Public\Images\QualityFood.png
+		Shared.Items\Public\Images\Satisfactionpng.png = Shared.Items\Public\Images\Satisfactionpng.png
+		Shared.Items\Public\Images\ShoppingCart.png = Shared.Items\Public\Images\ShoppingCart.png
+		Shared.Items\Public\Images\stand.png = Shared.Items\Public\Images\stand.png
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "React", "React", "{5C609126-7D5A-4F7B-B17E-FBE75F23A3B1}"
-	ProjectSection(SolutionItems) = preProject
-		Shared.Items\React\index.js = Shared.Items\React\index.js
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pages", "Pages", "{3709A599-DB8D-46AE-9773-C476E0AA7EE7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{F9E35CDD-E97F-4178-98E3-86320FB6DCD7}"
 	ProjectSection(SolutionItems) = preProject
-		Shared.Items\React\Components\Buttons-OSnack.js = Shared.Items\React\Components\Buttons-OSnack.js
-		Shared.Items\React\Components\Inputs-OSnack.js = Shared.Items\React\Components\Inputs-OSnack.js
-		Shared.Items\React\Components\Misc-OSnack.js = Shared.Items\React\Components\Misc-OSnack.js
-		Shared.Items\React\Components\Text-OSnack.js = Shared.Items\React\Components\Text-OSnack.js
+		Shared.Items\src\React\Components\Buttons-OSnack.js = Shared.Items\src\React\Components\Buttons-OSnack.js
+		Shared.Items\src\React\Components\Footer.js = Shared.Items\src\React\Components\Footer.js
+		Shared.Items\src\React\Components\Inputs-OSnack.js = Shared.Items\src\React\Components\Inputs-OSnack.js
+		Shared.Items\src\React\Components\Loading.js = Shared.Items\src\React\Components\Loading.js
+		Shared.Items\src\React\Components\Misc-OSnack.js = Shared.Items\src\React\Components\Misc-OSnack.js
+		Shared.Items\src\React\Components\Text-OSnack.js = Shared.Items\src\React\Components\Text-OSnack.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Login", "Login", "{86B0A411-AEFB-4A01-B5F5-CE2AF1CC8B94}"
+	ProjectSection(SolutionItems) = preProject
+		Shared.Items\src\React\Pages\Login\ForgotPasswordModal.js = Shared.Items\src\React\Pages\Login\ForgotPasswordModal.js
+		Shared.Items\src\React\Pages\Login\Login.js = Shared.Items\src\React\Pages\Login\Login.js
+		Shared.Items\src\React\Pages\Login\NewCustomerModal.js = Shared.Items\src\React\Pages\Login\NewCustomerModal.js
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Error", "Error", "{78547E33-DD84-4FC5-AC17-17A8F8D7D290}"
+	ProjectSection(SolutionItems) = preProject
+		Shared.Items\src\React\Pages\Error\Error.js = Shared.Items\src\React\Pages\Error\Error.js
+		Shared.Items\src\React\Pages\Error\PageNotFound.js = Shared.Items\src\React\Pages\Error\PageNotFound.js
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Redux", "Redux", "{F4635D18-16BB-4DCC-98D4-00ABC308CF77}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{032617F8-DDBA-4DEA-8D37-3817C004667E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layout", "Layout", "{C7F0C38C-4954-42DC-9775-C1E023A1B103}"
 	ProjectSection(SolutionItems) = preProject
-		Shared.Items\React\Components\Layout\Footer.js = Shared.Items\React\Components\Layout\Footer.js
-		Shared.Items\React\Components\Layout\NavMenu.css = Shared.Items\React\Components\Layout\NavMenu.css
-		Shared.Items\React\Components\Layout\NavMenu.js = Shared.Items\React\Components\Layout\NavMenu.js
+		Shared.Items\src\Redux\Actions\AuthenticationAction.js = Shared.Items\src\Redux\Actions\AuthenticationAction.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Public", "Public", "{17CB9C8B-DFBB-45FA-88E7-7612BBBB196F}"
+	ProjectSection(SolutionItems) = preProject
+		Shared.Items\Public\favicon.ico = Shared.Items\Public\favicon.ico
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B5CA1F40-6A6E-4B2C-81A9-E601D8AA1735}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_CoreFiles", "_CoreFiles", "{0A71FE15-ECAB-48A5-813F-F104237C1817}"
+	ProjectSection(SolutionItems) = preProject
+		Shared.Items\src\_CoreFiles\main.css = Shared.Items\src\_CoreFiles\main.css
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NavMenu", "NavMenu", "{48B192FA-EBA7-437F-841D-0186B5FAB20F}"
+	ProjectSection(SolutionItems) = preProject
+		Shared.Items\src\React\Components\NavMenu\NavMenu.css = Shared.Items\src\React\Components\NavMenu\NavMenu.css
+		Shared.Items\src\React\Components\NavMenu\NavMenu.js = Shared.Items\src\React\Components\NavMenu\NavMenu.js
+		Shared.Items\src\React\Components\NavMenu\NavMenuItems.js = Shared.Items\src\React\Components\NavMenu\NavMenuItems.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reducers", "Reducers", "{09C9AD91-8737-453E-A517-1F01F4A32100}"
+	ProjectSection(SolutionItems) = preProject
+		Shared.Items\src\Redux\Reducers\AuthenticationReducer.js = Shared.Items\src\Redux\Reducers\AuthenticationReducer.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MyAccount", "MyAccount", "{67C54D0A-58FC-4295-8CE0-BD914E99D52E}"
+	ProjectSection(SolutionItems) = preProject
+		Shared.Items\src\React\Pages\MyAccount\MyAccount.js = Shared.Items\src\React\Pages\MyAccount\MyAccount.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maintenance", "Maintenance", "{ADC17865-7E04-4992-8F0B-28C1B3BBE853}"
+	ProjectSection(SolutionItems) = preProject
+		Shared.Items\src\React\Pages\Maintenance\ConfirmEmail.js = Shared.Items\src\React\Pages\Maintenance\ConfirmEmail.js
+		Shared.Items\src\React\Pages\Maintenance\ResetPassword.js = Shared.Items\src\React\Pages\Maintenance\ResetPassword.js
 	EndProjectSection
 EndProject
 Global
@@ -99,10 +132,6 @@ Global
 		{099B26C9-BC4C-4CAD-B49D-2CB4DFDC819D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{099B26C9-BC4C-4CAD-B49D-2CB4DFDC819D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{099B26C9-BC4C-4CAD-B49D-2CB4DFDC819D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B5986BA-D0F0-46C4-9D6B-4E5CE17F81A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B5986BA-D0F0-46C4-9D6B-4E5CE17F81A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B5986BA-D0F0-46C4-9D6B-4E5CE17F81A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B5986BA-D0F0-46C4-9D6B-4E5CE17F81A6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BE13E202-C677-4B19-A6CF-C63512A88E89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BE13E202-C677-4B19-A6CF-C63512A88E89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE13E202-C677-4B19-A6CF-C63512A88E89}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -116,17 +145,22 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{EE3E09B8-FCD4-436C-A4C6-A2E99A284AF0} = {42F17559-67F8-4B49-95EE-A650A39916C5}
-		{337D4DBB-F89B-433D-8933-C678D6AB708B} = {42F17559-67F8-4B49-95EE-A650A39916C5}
-		{712C5F06-42A0-4E65-931A-F567DDD0B2D0} = {337D4DBB-F89B-433D-8933-C678D6AB708B}
-		{5C609126-7D5A-4F7B-B17E-FBE75F23A3B1} = {42F17559-67F8-4B49-95EE-A650A39916C5}
+		{EE3E09B8-FCD4-436C-A4C6-A2E99A284AF0} = {0A71FE15-ECAB-48A5-813F-F104237C1817}
+		{337D4DBB-F89B-433D-8933-C678D6AB708B} = {17CB9C8B-DFBB-45FA-88E7-7612BBBB196F}
+		{5C609126-7D5A-4F7B-B17E-FBE75F23A3B1} = {B5CA1F40-6A6E-4B2C-81A9-E601D8AA1735}
 		{3709A599-DB8D-46AE-9773-C476E0AA7EE7} = {5C609126-7D5A-4F7B-B17E-FBE75F23A3B1}
 		{F9E35CDD-E97F-4178-98E3-86320FB6DCD7} = {5C609126-7D5A-4F7B-B17E-FBE75F23A3B1}
 		{86B0A411-AEFB-4A01-B5F5-CE2AF1CC8B94} = {3709A599-DB8D-46AE-9773-C476E0AA7EE7}
 		{78547E33-DD84-4FC5-AC17-17A8F8D7D290} = {3709A599-DB8D-46AE-9773-C476E0AA7EE7}
-		{F4635D18-16BB-4DCC-98D4-00ABC308CF77} = {42F17559-67F8-4B49-95EE-A650A39916C5}
+		{F4635D18-16BB-4DCC-98D4-00ABC308CF77} = {B5CA1F40-6A6E-4B2C-81A9-E601D8AA1735}
 		{032617F8-DDBA-4DEA-8D37-3817C004667E} = {F4635D18-16BB-4DCC-98D4-00ABC308CF77}
-		{C7F0C38C-4954-42DC-9775-C1E023A1B103} = {F9E35CDD-E97F-4178-98E3-86320FB6DCD7}
+		{17CB9C8B-DFBB-45FA-88E7-7612BBBB196F} = {42F17559-67F8-4B49-95EE-A650A39916C5}
+		{B5CA1F40-6A6E-4B2C-81A9-E601D8AA1735} = {42F17559-67F8-4B49-95EE-A650A39916C5}
+		{0A71FE15-ECAB-48A5-813F-F104237C1817} = {B5CA1F40-6A6E-4B2C-81A9-E601D8AA1735}
+		{48B192FA-EBA7-437F-841D-0186B5FAB20F} = {F9E35CDD-E97F-4178-98E3-86320FB6DCD7}
+		{09C9AD91-8737-453E-A517-1F01F4A32100} = {F4635D18-16BB-4DCC-98D4-00ABC308CF77}
+		{67C54D0A-58FC-4295-8CE0-BD914E99D52E} = {3709A599-DB8D-46AE-9773-C476E0AA7EE7}
+		{ADC17865-7E04-4992-8F0B-28C1B3BBE853} = {3709A599-DB8D-46AE-9773-C476E0AA7EE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {971A19A1-F5D8-4B6B-AE1A-8C6EDCA30F9C}

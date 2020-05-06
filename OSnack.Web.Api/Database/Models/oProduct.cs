@@ -6,8 +6,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OSnack.Web.Api.Database.Models
 {
+    [Table("Products")]
     public class oProduct
     {
+        [Key]
         public int Id { get; set; }
 
         [Column(TypeName = "nvarchar(256)")]
@@ -22,12 +24,11 @@ namespace OSnack.Web.Api.Database.Models
         [Required(ErrorMessage = "Image is Required \n")]
         public string ImagePath { get; set; }
 
-        public bool Active { get; set; } = false;
-
         [Column(TypeName = "decimal(7,2)")]
         [Required(ErrorMessage = "Price is Required \n")]
         public decimal Price { get; set; }
 
+        [Required(ErrorMessage = "Unit Quantity is Required \n")]
         public int UnitQuantity { get; set; }
 
 
@@ -35,18 +36,19 @@ namespace OSnack.Web.Api.Database.Models
         public ProductUnitType Unit { get; set; }
 
         [Required(ErrorMessage = "Category is Required \n")]
+        [ForeignKey("CategoryId")]
         public oCategory Category { get; set; }
 
-        //[JsonIgnore]
-        //public ICollection<oOrderItem> OrderItems { get; set; }
-
-        [ForeignKey("ProductId"), Column(Order = 1)]
-        public ICollection<oStorageItem> StorageItems { get; set; }
+        [InverseProperty("Product")]
+        public ICollection<oStoreProduct> StoreProducts { get; set; }
 
         [NotMapped]
         public int AverageRate { get; set; }
 
         [NotMapped]
         public List<oComment> Comments { get; set; } = new List<oComment>();
+        [NotMapped]
+        [Required(ErrorMessage = "Image is Required \n")]
+        public string ImageBase64 { get; set; }
     }
 }

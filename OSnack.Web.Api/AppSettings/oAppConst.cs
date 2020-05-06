@@ -1,4 +1,11 @@
-﻿namespace OSnack.Web.Api.AppSettings
+﻿using Newtonsoft.Json;
+using OSnack.Web.Api.AppSettings.AppModels;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+
+namespace OSnack.Web.Api.AppSettings
 {
     /// <summary>
     /// Web API Only constant variable
@@ -51,6 +58,7 @@
             public const string LevelFour = "LevelFour";
         }
 
+
         public struct CommonErrors
         {
             /// <summary>
@@ -58,6 +66,34 @@
             /// </summary>
             public const string ServerError = "Server Error. Please Contact Administrator.";
 
+        }
+
+        /// <summary>
+        /// Get the information from the appSettings json file
+        /// </summary>
+        public static oSettings AppSettings
+        {
+            get
+            {
+                /// Get the directory of the app settings.json file
+                var jsonFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\AppSettings\AppItems\oSettings.json";
+                /// If above file does not exists check the android path.
+                if (!File.Exists(jsonFilePath))
+                    jsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"AppSettings\AppItems\oSettings.json");
+                /// Read the json file from that directory
+                /// de-serialise the json string into an object of AppSettings and return it 
+                return JsonConvert.DeserializeObject<oSettings>(File.ReadAllText(jsonFilePath));
+
+
+                //var assembly = IntrospectionExtensions.GetTypeInfo(typeof(oSettings)).Assembly;
+                //Stream stream = assembly.GetManifestResourceStream("OSnack.Web.APi.oSettings.json");
+                //string text = "";
+                //using (var reader = new StreamReader(stream))
+                //{
+                //    text = reader.ReadToEnd();
+                //}
+                //return JsonConvert.DeserializeObject<oSettings>(text);
+            }
         }
     }
 }

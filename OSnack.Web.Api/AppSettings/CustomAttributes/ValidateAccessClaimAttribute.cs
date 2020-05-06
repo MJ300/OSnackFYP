@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OSnack.Web.Api.AppSettings;
+using System.ComponentModel.DataAnnotations;
 namespace Shared.Lib.CustomValidationAttributes
 {
     /// <summary>
@@ -16,10 +17,10 @@ namespace Shared.Lib.CustomValidationAttributes
         {
             switch ((string)value)
             {
-                case sAppConst.AccessClaims.Admin:
-                case sAppConst.AccessClaims.Manager:
-                case sAppConst.AccessClaims.Staff:
-                case sAppConst.AccessClaims.Customer:
+                case oAppConst.AccessClaims.Admin:
+                case oAppConst.AccessClaims.Manager:
+                case oAppConst.AccessClaims.Staff:
+                case oAppConst.AccessClaims.Customer:
                     return true;
             }
             ErrorMessage = "Invalid Access Claim Level";

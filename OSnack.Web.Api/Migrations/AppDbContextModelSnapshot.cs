@@ -66,12 +66,12 @@ namespace OSnack.Web.Api.Migrations
                         .HasColumnType("nvarchar(500)")
                         .HasMaxLength(500);
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("UserId1")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Addresses");
                 });
@@ -111,9 +111,6 @@ namespace OSnack.Web.Api.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<string>("ImagePath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -126,10 +123,19 @@ namespace OSnack.Web.Api.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(7,2)");
 
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Unit")
                         .HasColumnType("int");
 
+                    b.Property<int>("UnitQuantity")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Categories");
                 });
@@ -181,12 +187,15 @@ namespace OSnack.Web.Api.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("EmailId")
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TokenId")
                         .HasColumnType("int");
 
                     b.HasKey("Email");
 
-                    b.HasIndex("EmailId");
+                    b.HasIndex("TokenId");
 
                     b.ToTable("NewsletterSubscriptions");
                 });
@@ -194,17 +203,24 @@ namespace OSnack.Web.Api.Migrations
             modelBuilder.Entity("OSnack.Web.Api.Database.Models.oOrder", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AddressId")
+                        .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CouponCode")
+                    b.Property<string>("Code")
                         .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("Date")
                         .IsRequired()
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<int?>("PaymentId")
+                        .IsRequired()
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -216,7 +232,10 @@ namespace OSnack.Web.Api.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.HasIndex("CouponCode");
+                    b.HasIndex("Code");
+
+                    b.HasIndex("PaymentId")
+                        .IsUnique();
 
                     b.ToTable("Orders");
                 });
@@ -228,7 +247,8 @@ namespace OSnack.Web.Api.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("OrderId")
+                    b.Property<int?>("OrderId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
@@ -237,13 +257,22 @@ namespace OSnack.Web.Api.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StoreProductProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StoreProductStoreId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("StoreProductStoreId", "StoreProductProductId");
 
-                    b.ToTable("OrdersItems");
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("OSnack.Web.Api.Database.Models.oPayment", b =>
@@ -276,10 +305,8 @@ namespace OSnack.Web.Api.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -308,7 +335,30 @@ namespace OSnack.Web.Api.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("OSnack.Web.Api.Database.Models.oRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AccessClaim")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("OSnack.Web.Api.Database.Models.oScore", b =>
@@ -321,10 +371,10 @@ namespace OSnack.Web.Api.Migrations
 
                     b.HasKey("OrderItemId");
 
-                    b.ToTable("Scores");
+                    b.ToTable("Score");
                 });
 
-            modelBuilder.Entity("OSnack.Web.Api.Database.Models.oStorage", b =>
+            modelBuilder.Entity("OSnack.Web.Api.Database.Models.oStore", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -335,24 +385,36 @@ namespace OSnack.Web.Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Storages");
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Stores");
                 });
 
-            modelBuilder.Entity("OSnack.Web.Api.Database.Models.oStorageItem", b =>
+            modelBuilder.Entity("OSnack.Web.Api.Database.Models.oStoreProduct", b =>
                 {
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StorageId")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("ProductId", "StorageId");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
-                    b.HasIndex("StorageId");
+                    b.HasKey("StoreId", "ProductId");
 
-                    b.ToTable("StorageItems");
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("StoreProducts");
                 });
 
             modelBuilder.Entity("OSnack.Web.Api.Database.Models.oToken", b =>
@@ -362,7 +424,7 @@ namespace OSnack.Web.Api.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("EmailId")
+                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ExpiaryDateTime")
@@ -434,9 +496,9 @@ namespace OSnack.Web.Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("Role")
+                    b.Property<int?>("RoleId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("int");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -450,6 +512,8 @@ namespace OSnack.Web.Api.Migrations
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -467,7 +531,7 @@ namespace OSnack.Web.Api.Migrations
                 {
                     b.HasOne("OSnack.Web.Api.Database.Models.oUser", "User")
                         .WithMany("Addresses")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -475,7 +539,7 @@ namespace OSnack.Web.Api.Migrations
             modelBuilder.Entity("OSnack.Web.Api.Database.Models.oAppLog", b =>
                 {
                     b.HasOne("OSnack.Web.Api.Database.Models.oUser", "User")
-                        .WithMany("AppLogs")
+                        .WithMany()
                         .HasForeignKey("UserId");
                 });
 
@@ -490,7 +554,7 @@ namespace OSnack.Web.Api.Migrations
                 {
                     b.HasOne("OSnack.Web.Api.Database.Models.oToken", "Token")
                         .WithMany()
-                        .HasForeignKey("EmailId");
+                        .HasForeignKey("TokenId");
                 });
 
             modelBuilder.Entity("OSnack.Web.Api.Database.Models.oOrder", b =>
@@ -503,11 +567,11 @@ namespace OSnack.Web.Api.Migrations
 
                     b.HasOne("OSnack.Web.Api.Database.Models.oCoupon", "Coupon")
                         .WithMany("Orders")
-                        .HasForeignKey("CouponCode");
+                        .HasForeignKey("Code");
 
                     b.HasOne("OSnack.Web.Api.Database.Models.oPayment", "Payment")
                         .WithOne("Order")
-                        .HasForeignKey("OSnack.Web.Api.Database.Models.oOrder", "Id")
+                        .HasForeignKey("OSnack.Web.Api.Database.Models.oOrder", "PaymentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -520,9 +584,9 @@ namespace OSnack.Web.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OSnack.Web.Api.Database.Models.oProduct", "Product")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("ProductId")
+                    b.HasOne("OSnack.Web.Api.Database.Models.oStoreProduct", "StoreProduct")
+                        .WithMany()
+                        .HasForeignKey("StoreProductStoreId", "StoreProductProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -545,26 +609,35 @@ namespace OSnack.Web.Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OSnack.Web.Api.Database.Models.oStorageItem", b =>
+            modelBuilder.Entity("OSnack.Web.Api.Database.Models.oStoreProduct", b =>
                 {
-                    b.HasOne("OSnack.Web.Api.Database.Models.oProduct", null)
-                        .WithMany("StorageItems")
+                    b.HasOne("OSnack.Web.Api.Database.Models.oProduct", "Product")
+                        .WithMany("StoreProducts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OSnack.Web.Api.Database.Models.oStorage", null)
-                        .WithMany("StorageItems")
-                        .HasForeignKey("StorageId")
+                    b.HasOne("OSnack.Web.Api.Database.Models.oStore", "Store")
+                        .WithMany("StoreProducts")
+                        .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("OSnack.Web.Api.Database.Models.oToken", b =>
                 {
-                    b.HasOne("OSnack.Web.Api.Database.Models.oUser", null)
-                        .WithMany("Tokens")
+                    b.HasOne("OSnack.Web.Api.Database.Models.oUser", "User")
+                        .WithMany()
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("OSnack.Web.Api.Database.Models.oUser", b =>
+                {
+                    b.HasOne("OSnack.Web.Api.Database.Models.oRole", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OSnack.Web.Api.AppModels;
+
 using OSnack.Web.Api.AppSettings;
 using OSnack.Web.Api.AppSettings.CustomTypes;
 using OSnack.Web.Api.Database.Context;
 using OSnack.Web.Api.Database.Models;
+using static OSnack.Web.Api.AppSettings.oAppFunc;
 
 namespace OSnack.Web.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class NewsletterController : ControllerBase
     {
         private AppDbContext DbContext { get; }
@@ -44,7 +45,7 @@ namespace OSnack.Web.Api.Controllers
                 /// if model validation failed
                 if (!TryValidateModel(newsletter))
                 {
-                    oAppConst.ExtractErrors(ModelState, ref ErrorsList);
+                    oAppFunc.ExtractErrors(ModelState, ref ErrorsList);
                     /// return the errors
                     return UnprocessableEntity(ErrorsList);
                 }
@@ -68,11 +69,10 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
             {
                 /// Add the error below to the error list and return bad request
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
-
 
         /// <summary>
         /// Delete Newsletter
@@ -90,26 +90,35 @@ namespace OSnack.Web.Api.Controllers
             try
             {
                 /// if the Newsletter record with the same id is not found
-                if (!await DbContext.NewsletterSubscriptions.Include(t=>t.Token).AnyAsync(d => d.Email == email).ConfigureAwait(false))
+                if (!await DbContext.NewsletterSubscriptions.Include(t => t.Token)
+                    .AnyAsync(d => d.Token.ValueType == TokenType.Subscription
+                                && d.Token.Value.Equals(Token, StringComparison.CurrentCulture))
+                    .ConfigureAwait(false))
                 {
-                    oAppConst.Error(ref ErrorsList, "Email not found");
+                    oAppFunc.Error(ref ErrorsList, "Token not found");
                     return NotFound(ErrorsList);
                 }
 
+                oNewsletterSubscription ns = await DbContext.NewsletterSubscriptions.Include(t => t.Token)
+                    .SingleOrDefaultAsync(d => d.Token.ValueType == TokenType.Subscription
+                                && d.Token.Value.Equals(Token, StringComparison.CurrentCulture))
+                    .ConfigureAwait(false);
+
                 /// now delete the Newsletter record
-                DbContext.NewsletterSubscriptions.Remove(DbContext.NewsletterSubscriptions.SingleOrDefault(d => d.Email == email));
+                DbContext.NewsletterSubscriptions.Remove(ns);
+
                 /// save the changes to the database
                 await DbContext.SaveChangesAsync().ConfigureAwait(false);
+
                 /// return 200 OK status
-                return Ok($"Address was deleted");
+                return Ok($"{ns.Email} is now unsubscribed");
             }
             catch (Exception)
             {
                 /// Add the error below to the error list
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,29 @@ namespace OSnack.Web.Api.AppSettings
     /// <summary>
     /// Web API Only constant Functions
     /// </summary>
-    public class oAppFunc
+    public static class oAppFunc
     {
+        public static void DeleteImage(string path, string webRootPath) =>
+            Directory.Delete(string.Format(@"{0}\{1}", webRootPath, path), true);
+
+        public static string SaveImageToWWWRoot(string fileName, string webRootPath, string imgBase64, string folderName)
+        {
+            byte[] imgBytes = Convert.FromBase64String(imgBase64.Split("base64,")[1]);
+
+            var SelectedFolder = Path.Combine(webRootPath, string.Format(folderName));
+            var path = string.Format(@"{0}\{1}.png", SelectedFolder, fileName);
+
+            if (!Directory.Exists(SelectedFolder))
+                Directory.CreateDirectory(SelectedFolder);
+
+            using (var fs = new FileStream(string.Format(path), FileMode.Create))
+            {
+                fs.Write(imgBytes);
+            }
+
+            return path.Split(@"wwwroot\")[1];
+        }
+
         /// <summary>
         /// This method is used to extract the errors form model state
         /// </summary>
@@ -37,8 +59,12 @@ namespace OSnack.Web.Api.AppSettings
         /// <param name="Key">Id of the error</param>
         /// <param name="Message">The error message</param>
         /// <param name="errors">Reference of the error list used to add the error</param>
-        public static void Error(ref List<oError> errors, string value, string key = "") =>
+        public static void Error(ref List<oError> errors, string value, string key = "")
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                key = new Random().Next(1, 20).ToString();
             errors.Add(new oError(key, value));
+        }
         public class oError
         {
             /// <summary>

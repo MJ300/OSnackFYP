@@ -98,37 +98,37 @@ class AccountInfo extends React.PureComponent {
             <Container className="custom-fluid-container row">
                 <h1 className="col-12">Account Info </h1>
                 {/* Name */}
-                <div className={"col-md-6 col-12"}>
+                <Row className={"col-md-6 col-12"}>
                     <label className="col-form-label">Name</label>
                     <input type="text" className="form-control" defaultValue={this.state.name}
                         onChange={i => this.setState({ name: i.target.value.trim() })} />
-                </div>
+                </Row>
                 {/* Surname */}
-                <div className={"col-md-6 col-12"}>
+                <Row className={"col-md-6 col-12"}>
                     <label className="col-form-label">Surname</label>
                     <input type="text" className="form-control" defaultValue={this.state.surname}
                         onChange={i => this.setState({ surname: i.target.value.trim() })} />
-                </div>
+                </Row>
                 {/* Phone Number */}
-                <div className={"col-12"}>
+                <Row className={"col-12"}>
                     <label className="col-form-label">Phone Number </label>
                     <input type="text" className="form-control" defaultValue={this.state.phoneNumber}
                         onChange={i => this.setState({ phoneNumber: i.target.value.trim() })} />
-                </div>
+                </Row>
                 {/* Email */}
-                <div className={"col-12"}>
+                <Row className={"col-12"}>
                     <label className="col-form-label">Email</label>
                     <input type="text" className="form-control" defaultValue={this.state.email}
                         onChange={i => this.setState({ email: i.target.value.trim() })} />
-                </div>
+                </Row>
                 {/* Display status e.g Failed / Updated*/}
-                <div className={"col-6 mt-2"}>
+                <Row className={"col-6 mt-2"}>
                     <h5 className={"form-control boarder-none " + this.state.returnStatus.bgColor}>
                         {this.state.returnStatus.message}
                     </h5>
-                </div>
+                </Row>
                 {/* Change Password button and modal */}
-                <div className={"col-6 mt-2"}>
+                <Row className={"col-6 mt-2"}>
                     <a className="boarder-bottom form-control"
                         onClick={() => this.setState({ changePasswordIsOpen: true })}>
                         Change Password
@@ -136,14 +136,14 @@ class AccountInfo extends React.PureComponent {
                     {/* Change password Modal */}
                     <Modal isOpen={this.state.changePasswordIsOpen} className={'modal-custom'}>
                         {/* Header and close button */}
-                        <div className={'bg-header'}>
+                        <Row className={'bg-header'}>
                             <h2 className={'p-3'}>Change Password
                                     <a className="btn btn-lg btn-green float-right pl-2 pr-2 pt-0 pb-0"
                                     onClick={() => this.setState({ changePasswordIsOpen: false })}>
                                     <h1> X </h1>
                                 </a>
                             </h2>
-                        </div>
+                        </Row>
                         <ModalBody>
                             {/* Current Password */}
                             <label className="col-form-label">Current Password</label>
@@ -162,25 +162,25 @@ class AccountInfo extends React.PureComponent {
                                 {this.state.returnStatusPassword.message}
                             </h5>
                             {/* Error messages*/}
-                            <div className={"text-danger"}>{this.state.returnStatusPassword.error}</div>
+                            <Row className={"text-danger"}>{this.state.returnStatusPassword.error}</Row>
                             {/* Password change submit button*/}
                             <button className="btn btn-lg btn-green col-12 mt-2" onClick={this.editPassword}>Submit</button>
                         </ModalBody>
                     </Modal>
-                </div>
+                </Row>
                 {/* Display Errors */}
-                <div className={"col-12"}>
+                <Row className={"col-12"}>
                     {this.state.returnStatus.errors.map(err =>
-                        <div key={err.id} className={"text-danger"}>* {err.message}</div>
+                        <Row key={err.id} className={"text-danger"}>* {err.message}</Row>
                     )}
-                </div>
+                </Row>
                 {/* Edit Button */}
-                <div className={"col-12 mt-2"}>
+                <Row className={"col-12 mt-2"}>
                     <button type="submit" className="btn btn-lg btn-green col"
                         onClick={this.editAccountInfo}>
                         Edit
                     </button>
-                </div>
+                </Row>
             </Container>
         );
     }

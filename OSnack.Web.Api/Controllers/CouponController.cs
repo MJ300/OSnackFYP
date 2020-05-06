@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OSnack.Web.Api.AppModels;
 using OSnack.Web.Api.AppSettings;
 using OSnack.Web.Api.Database.Context;
 using OSnack.Web.Api.Database.Models;
@@ -10,10 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using static OSnack.Web.Api.AppSettings.oAppFunc;
 
 namespace OSnack.Web.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class CouponController : ControllerBase
     {
         private AppDbContext DbContext { get; }
@@ -45,7 +45,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) //ArgumentNullException
             {
                 /// in the case any exceptions return the following error
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -69,7 +69,7 @@ namespace OSnack.Web.Api.Controllers
                 /// if model validation failed
                 if (!TryValidateModel(newCoupon))
                 {
-                    oAppConst.ExtractErrors(ModelState, ref ErrorsList);
+                    oAppFunc.ExtractErrors(ModelState, ref ErrorsList);
                     /// return Unprocessable Entity with all the errors
                     return UnprocessableEntity(ErrorsList);
                 }
@@ -78,7 +78,7 @@ namespace OSnack.Web.Api.Controllers
                 if (!await DbContext.Coupons.AnyAsync(d => d.Code == newCoupon.Code).ConfigureAwait(false))
                 {
                     /// extract the errors and return bad request containing the errors
-                    oAppConst.Error(ref ErrorsList, "Coupon already exists.");
+                    oAppFunc.Error(ref ErrorsList, "Coupon already exists.");
                     return StatusCode(412, ErrorsList);
                 }
 
@@ -93,7 +93,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
             {
                 /// Add the error below to the error list and return bad request
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -117,7 +117,7 @@ namespace OSnack.Web.Api.Controllers
                 /// if model validation failed
                 if (!TryValidateModel(modifiedCoupon))
                 {
-                    oAppConst.ExtractErrors(ModelState, ref ErrorsList);
+                    oAppFunc.ExtractErrors(ModelState, ref ErrorsList);
                     /// return Unprocessable Entity with all the errors
                     return UnprocessableEntity(ErrorsList);
                 }
@@ -126,7 +126,7 @@ namespace OSnack.Web.Api.Controllers
                 if (!await DbContext.Coupons.AnyAsync(d => d.Code == modifiedCoupon.Code).ConfigureAwait(false))
                 {
                     /// extract the errors and return bad request containing the errors
-                    oAppConst.Error(ref ErrorsList, "Coupon Not exists.");
+                    oAppFunc.Error(ref ErrorsList, "Coupon Not exists.");
                     return StatusCode(412, ErrorsList);
                 }
 
@@ -135,7 +135,7 @@ namespace OSnack.Web.Api.Controllers
                                                           d.Type != modifiedCoupon.Type).ConfigureAwait(false))
                 {
                     /// extract the errors and return bad request containing the errors
-                    oAppConst.Error(ref ErrorsList, "Coupon Type Can't be Change.");
+                    oAppFunc.Error(ref ErrorsList, "Coupon Type Can't be Change.");
                     return StatusCode(412, ErrorsList);
                 }
 
@@ -152,7 +152,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
             {
                 /// Add the error below to the error list and return bad request
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -176,14 +176,14 @@ namespace OSnack.Web.Api.Controllers
                 /// if the coupon record with the same id is not found
                 if (!await DbContext.Coupons.AnyAsync(d => d.Code == coupon.Code).ConfigureAwait(false))
                 {
-                    oAppConst.Error(ref ErrorsList, "Coupon not found");
+                    oAppFunc.Error(ref ErrorsList, "Coupon not found");
                     return NotFound(ErrorsList);
                 }
 
                 /// If the coupon is in use by any Order then do not allow delete
                 if (await DbContext.Orders.AnyAsync(c => c.Coupon.Code == coupon.Code).ConfigureAwait(false))
                 {
-                    oAppConst.Error(ref ErrorsList, "Coupon is in use by at least one Order.");
+                    oAppFunc.Error(ref ErrorsList, "Coupon is in use by at least one Order.");
                     return StatusCode(412, ErrorsList);
                 }
 
@@ -197,7 +197,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception)
             {
                 /// Add the error below to the error list
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }

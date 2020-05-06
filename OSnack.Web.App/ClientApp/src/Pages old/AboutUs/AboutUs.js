@@ -2,9 +2,9 @@
 class AboutUs extends React.Component {
     render() {
         return (
-            <div>
+            <Row>
                 <h1>About Us</h1>
-            </div>
+            </Row>
         );
     }
 }

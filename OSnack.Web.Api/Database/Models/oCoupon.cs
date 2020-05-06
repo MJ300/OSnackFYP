@@ -6,11 +6,12 @@ using Newtonsoft.Json;
 using OSnack.Web.Api.AppSettings.CustomTypes;
 namespace OSnack.Web.Api.Database.Models
 {
+    [Table("Coupons")]
     public class oCoupon
     {
+        [Key]
         [StringLength(25, ErrorMessage = "Must be less than 25 Characters \n")]
         [Required(ErrorMessage = "Coupon Code Required \n")]
-        [Key]
         public string Code { get; set; }
 
         [Required(ErrorMessage = "Coupon Type is Required \n")]

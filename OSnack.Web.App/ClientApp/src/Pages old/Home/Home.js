@@ -41,20 +41,20 @@ class Home extends React.PureComponent {
         }
    
         return (
-            <div className='bg-transparent'>
-                <div>
+            <Row className='bg-transparent'>
+                <Row>
                     <img src={"/Images/core/stand.png"}
                         alt="OSnack" className="shadow-lg welcome-img" />
-                    <div className="text-center bg-white pb-5 pt-3 mt-3 mb-2">
+                    <Row className="text-center bg-white pb-5 pt-3 mt-3 mb-2">
                         <h1 className="welcome-Title">Welcome To Our Delicious Online Shop</h1>
                         <h3 className="welcome-Text">Here at OSnack, we aim to provide Quality Mediterranean Food for you to Enjoy.</h3>
-                        <div className="btn"><NavLink tag={Link} to="/Shop" className='btn-orange'>Shop Now</NavLink></div>
-                    </div>
-                </div>
+                        <Row className="btn"><NavLink tag={Link} to="/Shop" className='btn-orange'>Shop Now</NavLink></Row>
+                    </Row>
+                </Row>
                 <Container className="custom-container">
                     {/*<CustomCarousel products={this.state.payload.Items} />*/}
                 </Container>
-            </div>
+            </Row>
         );
     }
 }

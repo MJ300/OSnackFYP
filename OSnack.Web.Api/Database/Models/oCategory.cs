@@ -6,36 +6,45 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OSnack.Web.Api.Database.Models
 {
+    [Table("Categories")]
     public class oCategory
     {
+        [Key]
         public int Id { get; set; }
 
-
-        private string _Name;
+        #region nvarchar(256), Required, StringLength(256)
         [Column(TypeName = "nvarchar(256)")]
         [Required(ErrorMessage = "Name is Required \n")]
         [StringLength(256, ErrorMessage = "Must be less than 256 Characters \n")]
+        #endregion
         public string Name { get { return _Name; } set { _Name = value.Trim(); } }
+        private string _Name;
 
 
+        #region decimal(7,2), Required, DataType(Currency), PositiveDecimalIncludingZero
         [Column(TypeName = "decimal(7,2)")]
         [Required(ErrorMessage = "Default Price is Required \n")]
         [DataType(DataType.Currency, ErrorMessage = "Invalid Currency \n")]
         [PositiveDecimalIncludingZero(ErrorMessage = "Invalid Currency \n")]
+        #endregion
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Unit Type is Required \n")]
         public ProductUnitType Unit { get; set; }
 
+
+        [Required(ErrorMessage = "Unit Quantity is Required \n")]
+        public int UnitQuantity { get; set; }
+
         [Display(Name = "Display Image")]
-        [Required(ErrorMessage = "Image is Required \n")]
         public string ImagePath { get; set; }
 
-        public bool Active { get; set; } = false;
+        public bool Status { get; set; } = false;
 
         public ICollection<oProduct> Products { get; set; }
 
         [NotMapped]
-        public string ByteString { get; set; }
+        [Required(ErrorMessage = "Image is Required \n")]
+        public string ImageBase64 { get; set; }
     }
 }

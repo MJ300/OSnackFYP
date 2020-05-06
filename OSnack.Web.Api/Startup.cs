@@ -21,7 +21,7 @@ namespace OSnack.OSnack.Web.Api
     {
         internal IConfiguration Configuration { get; }
         internal const string AuthSchemeApplication = "Identity.Application";
-        public Startup(IConfiguration configuration)=> Configuration = configuration;
+        public Startup(IConfiguration configuration) => Configuration = configuration;
 
         /// <summary>
         /// Configure ASP.Net pipe-line services
@@ -37,10 +37,13 @@ namespace OSnack.OSnack.Web.Api
                 options.AddPolicy("WebApp",
                     builder =>
                     {
-                        builder.WithOrigins(oAppConst.Settings.Allowed_CORS)
+                        builder.WithOrigins(oAppConst.AppSettings.Allowed_CORS)
                                .AllowAnyMethod()
                                .AllowCredentials()
-                               .WithHeaders("Accept", "content-type");
+                               .WithHeaders("Accept",
+                               "content-type",
+                               "x-antiforgery-token",
+                               "Access-Control-Allow-Origin");
                     });
             });
 
@@ -51,7 +54,7 @@ namespace OSnack.OSnack.Web.Api
             /// Add Mvc service to the application
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            string conString = oAppConst.Settings.DbConnectionString();
+            string conString = oAppConst.AppSettings.DbConnectionString();
 
             /// Pass the SQL server connection to the db context
             /// receive the connection string from the package.json
@@ -138,7 +141,7 @@ namespace OSnack.OSnack.Web.Api
             /// Grab the Smtp server info
             /// and add it as a singleton middle-ware so that the EmailSettings object is 
             /// only referring to the same object across requests and classes
-            services.AddSingleton(oAppConst.Settings.EmailSettings);
+            services.AddSingleton(oAppConst.AppSettings.EmailSettings);
 
             /// Add email service as a Transient service middle-ware so that each class implementing this
             /// middle-ware will receive a new object of oEmailService class

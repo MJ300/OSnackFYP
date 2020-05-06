@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OSnack.Web.Api.AppModels;
+
 using OSnack.Web.Api.AppSettings;
 using OSnack.Web.Api.Database.Context;
 using OSnack.Web.Api.Database.Models;
@@ -13,10 +13,11 @@ using System.Linq;
 using System.Net.Mime;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using static OSnack.Web.Api.AppSettings.oAppFunc;
 
 namespace OSnack.Web.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     // [Authorize(oAppConst.AccessPolicies.LevelFour)]
     public class UserController : Controller
     {
@@ -44,7 +45,7 @@ namespace OSnack.Web.Api.Controllers
         #endregion
         [HttpGet("[action]/{roleId}/{searchValue?}")]
         // [Authorize(oAppConst.AccessPolicies.LevelTwo)] /// Ready For Test
-        public async Task<IActionResult> Get(string role, string searchValue = "")
+        public async Task<IActionResult> Get(int roleId, string searchValue = "")
         {
             try
             {
@@ -58,14 +59,14 @@ namespace OSnack.Web.Api.Controllers
                 if (string.IsNullOrWhiteSpace(searchValue))
                 {
 
-                    userList = await DbContext.Users.Where(u => u.Role == role)
+                    userList = await DbContext.Users.Where(u => u.Role.Id == roleId)
                                                     .Include(a => a.Addresses)
                                                     .ToListAsync().ConfigureAwait(false);
                 }
                 else
                 {
                     int.TryParse(searchValue, out int userId);
-                    userList = await DbContext.Users.Where(u => u.Role == role).Where(u => u.Id == userId
+                    userList = await DbContext.Users.Where(u => u.Role.Id == roleId).Where(u => u.Id == userId
                                                              || u.FirstName.Contains(searchValue, StringComparison.CurrentCultureIgnoreCase)
                                                              || u.Surname.Contains(searchValue, StringComparison.CurrentCultureIgnoreCase)
                                                              || u.Email.Contains(searchValue, StringComparison.CurrentCultureIgnoreCase))
@@ -82,7 +83,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) //ArgumentNullException
             {
                 /// in the case any exceptions return the following error
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -103,12 +104,12 @@ namespace OSnack.Web.Api.Controllers
         {
             try
             {
-                newUser.PasswordHash = newUser.NewPassword;
+                newUser.PasswordHash = newUser.Password;
                 ModelState.Clear();
                 /// if model validation failed
                 if (!TryValidateModel(newUser))
                 {
-                    oAppConst.ExtractErrors(ModelState, ref ErrorsList);
+                    oAppFunc.ExtractErrors(ModelState, ref ErrorsList);
                     /// return bad request with all the errors
                     return UnprocessableEntity(ErrorsList);
                 }
@@ -117,7 +118,7 @@ namespace OSnack.Web.Api.Controllers
                 if (DbContext.Users.Any(d => d.Email == newUser.Email))
                 {
                     /// extract the errors and return bad request containing the errors
-                    oAppConst.Error(ref ErrorsList, "Email already exists.");
+                    oAppFunc.Error(ref ErrorsList, "Email already exists.");
                     return StatusCode(412, ErrorsList);
                 }
 
@@ -132,7 +133,7 @@ namespace OSnack.Web.Api.Controllers
                     /// Add the error below to the error list and return bad request
                     foreach (var error in newUserResult.Errors)
                     {
-                        oAppConst.Error(ref ErrorsList, error.Description, error.Code);
+                        oAppFunc.Error(ref ErrorsList, error.Description, error.Code);
                     }
                     return StatusCode(417, ErrorsList);
                 }
@@ -140,7 +141,7 @@ namespace OSnack.Web.Api.Controllers
                 /// else result is successful the try to add the access claim for the user
                 IdentityResult addedClaimResult = await UserManager.AddClaimAsync(
                         newUser,
-                        new Claim(oAppConst.AccessClaims.Type, newUser.Role)
+                        new Claim(oAppConst.AccessClaims.Type, newUser.Role.AccessClaim)
                     ).ConfigureAwait(false);
 
                 /// if claim failed to be created
@@ -149,7 +150,7 @@ namespace OSnack.Web.Api.Controllers
                     /// remove the user account and return appropriate error
                     DbContext.Users.Remove(newUser);
                     await DbContext.SaveChangesAsync().ConfigureAwait(false);
-                    oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                    oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                     return StatusCode(417, ErrorsList);
                 }
 
@@ -160,7 +161,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
             {
                 /// Add the error below to the error list and return bad request
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -189,14 +190,14 @@ namespace OSnack.Web.Api.Controllers
                 if (!ModelState.IsValid)
                 {
                     /// extract the errors and return bad request containing the errors
-                    oAppConst.ExtractErrors(ModelState, ref ErrorsList);
+                    oAppFunc.ExtractErrors(ModelState, ref ErrorsList);
                     return UnprocessableEntity(ErrorsList);
                 }
 
                 /// if the user record with the same id is not found
                 if (!DbContext.Users.Any(u => u.Id == modifiedUser.Id))
                 {
-                    oAppConst.Error(ref ErrorsList, "User not found");
+                    oAppFunc.Error(ref ErrorsList, "User not found");
                     return StatusCode(412, ErrorsList);
                 }
                 /// find the current user details from the database
@@ -220,7 +221,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
             {
                 /// Add the error below to the error list and return bad request
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -246,7 +247,7 @@ namespace OSnack.Web.Api.Controllers
                 oUser user = await DbContext.Users.FindAsync(userId).ConfigureAwait(false);
                 if (user == null)
                 {
-                    oAppConst.Error(ref ErrorsList, "User not found");
+                    oAppFunc.Error(ref ErrorsList, "User not found");
                     return StatusCode(412, ErrorsList);
                 }
 
@@ -264,7 +265,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
             {
                 /// Add the error below to the error list and return bad request
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -287,7 +288,7 @@ namespace OSnack.Web.Api.Controllers
                 int.TryParse(User.Claims.FirstOrDefault(c => c.Type == "UserId").Value, out int userId);
                 if (modifiedUser.Id != userId)
                 {
-                    oAppConst.Error(ref ErrorsList, "Not Authorized!");
+                    oAppFunc.Error(ref ErrorsList, "Not Authorized!");
                     return StatusCode(412, ErrorsList);
                 }
 
@@ -303,7 +304,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
             {
                 /// Add the error below to the error list and return bad request
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -317,7 +318,7 @@ namespace OSnack.Web.Api.Controllers
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         #endregion
-       // [Authorize(oAppConst.AccessPolicies.LevelOne)]  /// Ready For Test
+        // [Authorize(oAppConst.AccessPolicies.LevelOne)]  /// Ready For Test
         [HttpPut("[action]")]
         public async Task<IActionResult> PutPassword([FromBody] oUser modifiedUser)
         {
@@ -333,7 +334,7 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
             {
                 /// Add the error below to the error list and return bad request
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
             }
         }
@@ -355,7 +356,7 @@ namespace OSnack.Web.Api.Controllers
                 /// if the User record with the same id is not found
                 if (!DbContext.Users.Any(u => u.Id == thisUser.Id))
                 {
-                    oAppConst.Error(ref ErrorsList, "User not found");
+                    oAppFunc.Error(ref ErrorsList, "User not found");
                     return StatusCode(412, ErrorsList);
                 }
 
@@ -371,8 +372,8 @@ namespace OSnack.Web.Api.Controllers
             catch (Exception)
             {
                 /// Add the error below to the error list and return bad request
-                oAppConst.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
-                return StatusCode(417, ErrorsList); 
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                return StatusCode(417, ErrorsList);
             }
         }
 
@@ -383,7 +384,7 @@ namespace OSnack.Web.Api.Controllers
 
             if (userDetails == null)
             {
-                oAppConst.Error(ref ErrorsList, "User not found!");
+                oAppFunc.Error(ref ErrorsList, "User not found!");
                 return null;
             }
 
@@ -391,7 +392,7 @@ namespace OSnack.Web.Api.Controllers
             string passResetToken = await UserManager.GeneratePasswordResetTokenAsync(userDetails).ConfigureAwait(false);
             /// reset user's password
             IdentityResult result = await UserManager.ResetPasswordAsync(
-                        userDetails, passResetToken, SelectedUser.NewPassword).ConfigureAwait(false);
+                        userDetails, passResetToken, SelectedUser.Password).ConfigureAwait(false);
 
             /// if result is Failed
             if (!result.Succeeded)

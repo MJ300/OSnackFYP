@@ -8,6 +8,12 @@
   <ItemGroup>
     <Compile Remove="Database\oLookup.cs" />
     <Compile Remove="Database\oLookupType.cs" />
+    <Compile Remove="Migrations\20200430082110_v0.5.cs" />
+    <Compile Remove="Migrations\20200430082110_v0.5.Designer.cs" />
+    <Compile Remove="Migrations\20200430194640_v0.6.cs" />
+    <Compile Remove="Migrations\20200430194640_v0.6.Designer.cs" />
+    <Compile Remove="Migrations\20200501172128_v0.6.cs" />
+    <Compile Remove="Migrations\20200501172128_v0.6.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,17 +27,12 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.3" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.3" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="MimeKit" Version="2.6.0" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HtmlCreator\HtmlCreator.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>
