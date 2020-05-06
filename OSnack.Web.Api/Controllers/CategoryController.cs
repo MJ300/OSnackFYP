@@ -282,9 +282,14 @@ namespace OSnack.Web.Api.Controllers
                     oAppFunc.Error(ref ErrorsList, "Category is in use by at least one product.");
                     return StatusCode(412, ErrorsList);
                 }
-
-                if (DeleteImage(category))
+                try
+                {
+                    oAppFunc.DeleteImage(category.ImagePath, WebHost.WebRootPath);
+                }
+                catch (Exception)
+                {
                     DbContext.AppLogs.Add(new oAppLog { Massage = string.Format("Image was not deleted. The path is: {0}", category.ImagePath) });
+                }
 
                 /// else the Category is found
                 /// now delete the Category record
@@ -299,35 +304,6 @@ namespace OSnack.Web.Api.Controllers
                 /// Add the error below to the error list
                 oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
                 return StatusCode(417, ErrorsList);
-            }
-        }
-
-        private bool DeleteImage(oCategory category)
-        {
-            try
-            {
-                oAppFunc.DeleteImage(category.ImagePath, WebHost.WebRootPath);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        private bool SaveImage(ref oCategory newCategory)
-        {
-            try
-            {
-                newCategory.ImagePath = oAppFunc.SaveImageToWWWRoot(newCategory.Name,
-                        WebHost.WebRootPath,
-                        newCategory.ImageBase64,
-                        @"Images/Categories");
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
             }
         }
     }
