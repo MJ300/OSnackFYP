@@ -5,6 +5,7 @@ import { Slider } from '@material-ui/core';
 import { Row } from 'reactstrap';
 import { PageHeader } from './Text-OSnack';
 import { Button } from './Buttons-OSnack';
+import { ConstMaxNumberOfPerItemsPage } from '../../_CoreFiles/CommonJs/AppConst.Shared';
 
 export const Loading = (props) => {
    return (
@@ -19,7 +20,7 @@ export class Pagination extends PureComponent {
       this.state = {
          listCount: this.props.listCount,
          SelectedPage: 1,
-         MaxItemsPerPage: 10,
+         MaxItemsPerPage: ConstMaxNumberOfPerItemsPage,
          arrayOfPageNumbers: [],
          totalPages: 1
       };
@@ -65,13 +66,13 @@ export class Pagination extends PureComponent {
       const remainder = Math.floor(this.state.listCount % this.state.MaxItemsPerPage);
       /// if the remainder is 0
       if (remainder === 0)
-         /// the total page is the result of item list count divided 
+         /// the total page is the result of item list count divided
          /// by max items per page value
          this.state.totalPages = Math.floor(this.state.listCount / this.state.MaxItemsPerPage);
       /// else if the remainder is more than 0
       else if (remainder > 0)
          /// The total page is the result of item list count divided
-         /// by max items per page value, plus one 
+         /// by max items per page value, plus one
          this.state.totalPages = Math.floor(this.state.listCount / this.state.MaxItemsPerPage) + 1;
 
       if (this.state.SelectedPage >= this.state.totalPages) {
@@ -79,7 +80,7 @@ export class Pagination extends PureComponent {
          await this.props.setList(this.state.SelectedPage, this.state.MaxItemsPerPage);
       }
 
-      /// if the current page is less than half of the 
+      /// if the current page is less than half of the
       /// max number of buttons to be shown.
       /// (The beginning of the pagination is shown)
       if (this.state.SelectedPage < halfMaxButtonsToBeShown) {
@@ -97,8 +98,8 @@ export class Pagination extends PureComponent {
       /// minus half of the Max number of pages to be shown
       /// (The end of the pagination is shown)
       else if (this.state.SelectedPage > this.state.totalPages - halfMaxButtonsToBeShown) {
-         /// the fist page would be the result of the 
-         /// selected page minus the product of Max number of buttons 
+         /// the fist page would be the result of the
+         /// selected page minus the product of Max number of buttons
          /// minus the result of total pages - selected page
          firstPage = this.state.SelectedPage
             - (maxButtonsToBeShown
@@ -279,7 +280,7 @@ export class ImageCropModal extends PureComponent {
 
    render() {
       return (
-         <Modal isOpen={this.props.isOpen}
+         <Modal isOpen={this.props.isOpen} toggle={this.props.toggle}
             className='modal-dialog modal-dialog-centered' >
             <ModalBody >
                <PageHeader title='Crop the image' />

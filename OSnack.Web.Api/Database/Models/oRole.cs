@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Shared.Lib.CustomValidationAttributes;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,6 +18,7 @@ namespace OSnack.Web.Api.Database.Models
 
         [Column(TypeName = "nvarchar(30)")]
         [Required(ErrorMessage = "Access Claim is Required \n")]
+        [ValidateAccessClaim]
         public string AccessClaim { get; set; }
 
         [JsonIgnore]

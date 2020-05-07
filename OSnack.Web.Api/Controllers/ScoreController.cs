@@ -14,6 +14,7 @@ using static OSnack.Web.Api.AppSettings.oAppFunc;
 
 namespace OSnack.Web.Api.Controllers
 {
+    [Route("[controller]")]
     public class ScoreController : ControllerBase
     {
         private AppDbContext DbContext { get; }

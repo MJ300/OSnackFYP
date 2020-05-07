@@ -267,3 +267,7 @@ input {
 .css-ebdd77 {
     position: relative !important;
 }
+
+.dd-border {
+    box-shadow: 0 0 0 0.15rem rgba(61, 95, 9, 0.20);
+}

@@ -19,7 +19,12 @@ export const AccessClaims = {
    Manager: "Manager",
    Customer: "Customer",
    Staff: "Staff",
-   List: ["Admin", "Manager", "Customer", "Staff"]
+   List: [
+      { id: 0, name: "Admin" },
+      { id: 1, name: "Customer" },
+      { id: 2, name: "Manager" },
+      { id: 3, name: "Staff" },
+   ]
 };
 
 export const CouponType = [
@@ -65,3 +70,5 @@ export class oError {
 
    }
 };
+
+export const ConstMaxNumberOfPerItemsPage = 5;

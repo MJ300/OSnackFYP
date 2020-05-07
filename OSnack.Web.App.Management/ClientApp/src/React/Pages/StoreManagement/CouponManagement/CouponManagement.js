@@ -5,28 +5,28 @@ import { Container, Row, Table } from 'reactstrap';
 import { PageHeader, Alert } from '../../../Components/Text-OSnack';
 import { Input } from '../../../Components/Inputs-OSnack';
 import { Button } from '../../../Components/Buttons-OSnack';
-import { oStore } from '../../../../_CoreFiles/CommonJs/Models-OSnack';
-import AddModifyStoreModal from './AddModifyStoreModal';
-import { getStores } from '../../../../Redux/Actions/StoreManagementAction';
+import { oCoupon } from '../../../../_CoreFiles/CommonJs/Models-OSnack';
+import AddModifyCouponModal from './AddModifyCouponModal';
+import { getCoupons } from '../../../../Redux/Actions/CouponManagementAction';
 import { AlertTypes, GetAllRecords, ConstMaxNumberOfPerItemsPage } from '../../../../_CoreFiles/CommonJs/AppConst.Shared';
 import { Pagination } from '../../../Components/Misc-OSnack';
 
-class StoreManagement extends PureComponent {
+class CouponManagement extends PureComponent {
    constructor(props) {
       super(props);
       this.state = {
          alertList: [],
          alertType: AlertTypes.Error,
-         storeList: [],
+         couponList: [],
          searchValue: '',
-         isOpenStoreModal: false,
-         selectedStore: new oStore(),
+         isOpenCouponModal: false,
+         selectedCoupon: new oCoupon(),
          listTotalCount: 0,
          SelectedPage: 1,
          MaxNumberPerItemsPage: ConstMaxNumberOfPerItemsPage
       };
 
-      this.editStore = this.editStore.bind(this);
+      this.editCoupon = this.editCoupon.bind(this);
       this.search = this.search.bind(this);
    }
    async search(SelectedPage, MaxNumberPerItemsPage) {
@@ -39,19 +39,19 @@ class StoreManagement extends PureComponent {
       if (this.state.searchValue != null && this.state.searchValue != '')
          searchVal = this.state.searchValue;
 
-      await this.props.getStores(this.state.SelectedPage, this.state.MaxNumberPerItemsPage, searchVal,
+      await this.props.getCoupons(this.state.SelectedPage, this.state.MaxNumberPerItemsPage, searchVal,
          ((result) => {
             if (result.errors.length > 0) {
                this.setState({ alertList: result.errors });
                return;
             }
-            this.setState({ storeList: result.storeList, listTotalCount: result.totalCount });
+            this.setState({ couponList: result.couponList, listTotalCount: result.totalCount });
          }).bind(this));
    }
 
-   async editStore(store) {
-      console.log(store);
-      this.setState({ selectedStore: store, isOpenStoreModal: true });
+   async editCoupon(coupon) {
+      console.log(coupon);
+      this.setState({ selectedCoupon: coupon, isOpenCouponModal: true });
    }
 
    render() {
@@ -59,7 +59,7 @@ class StoreManagement extends PureComponent {
          <Container className="custom-container">
             <Row className="mt-2">
                <Row className="col-12 col-md-10 col-lg-8 p-3 mb-3 bg-white ml-auto mr-auto">
-                  <PageHeader title="Store Management" />
+                  <PageHeader title="Coupon Management" />
                   {/***** Controls  ****/}
                   <Row className="col-12 p-0 m-0">
                      <Alert alertItemList={this.state.alertList}
@@ -82,25 +82,25 @@ class StoreManagement extends PureComponent {
                         onClick={async () => await this.search(this.state.SelectedPage, this.state.MaxNumberPerItemsPage)}
                      />
 
-                     <Button title="New Store"
+                     <Button title="New Coupon"
                         className="col-12 col-md-4 mt-2 mt-md-0 btn-green btn-lg"
-                        onClick={() => this.setState({ isOpenStoreModal: true })}
+                        onClick={() => this.setState({ isOpenCouponModal: true })}
                      />
                   </Row>
 
-                  {/***** Store Table  ****/}
+                  {/***** Coupon Table  ****/}
                   <Row className="col-12 p-0 m-0">
                      <Table className="col-12 text-center" striped responsive>
                         <thead>
                            <tr>
-                              <th>Store Name</th>
+                              <th>Coupon Name</th>
                               <th>Status</th>
                               <th></th>
                            </tr>
                         </thead>
-                        {this.state.storeList.length > 0 &&
+                        {this.state.couponList.length > 0 &&
                            <tbody>
-                              {this.state.storeList.map((i) => {
+                              {this.state.couponList.map((i) => {
                                  return (
                                     <tr key={i.id}>
                                        <td>{i.name}</td>
@@ -108,7 +108,7 @@ class StoreManagement extends PureComponent {
                                        <td>
                                           <div className="p-0 m-0">
                                              <button className="btn btn-sm btn-blue col-12 m-0"
-                                                onClick={() => this.editStore(i)}>
+                                                onClick={() => this.editCoupon(i)}>
                                                 Edit</button>
                                           </div>
                                        </td>
@@ -123,11 +123,11 @@ class StoreManagement extends PureComponent {
                         setList={this.search}
                         listCount={this.state.listTotalCount} />
                   </Row>
-                  <AddModifyStoreModal isOpen={this.state.isOpenStoreModal}
-                     toggle={i => this.setState({ isOpenStoreModal: !this.state.isOpenStoreModal })}
-                     store={this.state.selectedStore}
+                  <AddModifyCouponModal isOpen={this.state.isOpenCouponModal}
+                     toggle={i => this.setState({ isOpenCouponModal: !this.state.isOpenCouponModal })}
+                     coupon={this.state.selectedCoupon}
                      onActionCompleted={this.search}
-                     onCancel={() => this.setState({ isOpenStoreModal: false, selectedStore: new oStore() })}
+                     onCancel={() => this.setState({ isOpenCouponModal: false, selectedCoupon: new oCoupon() })}
                   />
                </Row>
             </Row>
@@ -140,12 +140,12 @@ const mapStateToProps = (state) => {
    return {
    };
 };
-/// Map actions (which may include dispatch to redux store) to component
+/// Map actions (which may include dispatch to redux coupon) to component
 const mapDispatchToProps = {
-   getStores,
+   getCoupons,
 };
 /// Redux Connection before exporting the component
 export default connect(
    mapStateToProps,
    dispatch => bindActionCreators(mapDispatchToProps, dispatch)
-)(StoreManagement);
+)(CouponManagement);

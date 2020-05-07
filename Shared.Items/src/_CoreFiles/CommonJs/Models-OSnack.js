@@ -371,7 +371,7 @@ export class oUser {
       this.firstName = user.firstName;
       this.surname = user.surname;
       this.registeredDate = user.registeredDate;
-      this.role = user.role;
+      this.role = new oRole(user.role);
       this.password = user.password;
       this.phoneNumber = user.phoneNumber;
       this.email = user.email;

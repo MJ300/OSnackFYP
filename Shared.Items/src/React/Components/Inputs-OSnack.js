@@ -1,14 +1,15 @@
 import React, { PureComponent } from 'react';
-import { AlertTypes } from '../../_CoreFiles/CommonJs/AppConst.Shared';
+import { AlertTypes, AccessClaims } from '../../_CoreFiles/CommonJs/AppConst.Shared';
 import { Button } from './Buttons-OSnack';
 import { ImageCropModal } from './Misc-OSnack';
 
 export const Input = (props) => {
    let key = Math.random();
-   if (props.key == null)
-      key = props.key;
+   if (!(props.keyVal == null))
+      key = props.keyVal;
+   let outterKey = `${key}1`;
    return (
-      <div className={props.className}>
+      <div className={props.className} key={outterKey}>
          {!props.lblDisabled &&
             <label htmlFor={key} className={"col-form-label " + props.lblCss}>{props.lblText}</label>
          }
@@ -65,22 +66,29 @@ export class ImageUpload extends PureComponent {
          await this.props.onUploaded(this.state.croppedImage);
       } catch (e) { }
    }
-   render() {
-      const { className, initBase64 } = this.props;
+   async componentDidUpdate() {
+      const { initBase64 } = this.props;
 
-      if (!(initBase64 == null) && this.state.croppedImage == '' && this.state.selectedImageBase64 == '') {
+      if (!(initBase64 == null) && initBase64 != '' && initBase64 !== this.state.croppedImage
+         && this.state.croppedImage == ''
+         && this.state.selectedImageBase64 == '') {
          this.state.selectedImageBase64 = initBase64;
          this.state.croppedImage = initBase64;
+         this.forceUpdate();
       }
+   }
+   render() {
+      const { className } = this.props;
 
-      const { alertList, alertType, croppedImage, isOpenImageCropModal,
+
+      let { alertList, alertType, croppedImage, isOpenImageCropModal,
          isPreviewImageOn, selectedImageBase64, key } = this.state;
 
-      if (!(this.props.key == null))
+      if (this.props.key == null)
          key = Math.random();
 
       return (
-         <div className={"row p-0 " + className}>
+         <div className={"row p-0 " + className} key={key}>
             {/***** Preview Image ****/}
             {croppedImage != '' && isPreviewImageOn &&
                <div className="row col-12 col-sm-9 p-0 m-0 ml-auto mr-auto">
@@ -109,13 +117,12 @@ export class ImageUpload extends PureComponent {
                </div>
             </div>
             {/***** Modal Image Drop-down ****/}
-            {isOpenImageCropModal &&
-               <ImageCropModal base64Image={this.state.selectedImageBase64}
-                  isOpen={isOpenImageCropModal}
-                  onCancel={() => this.setState({ isOpenImageCropModal: false })}
-                  onCropComplete={this.onCropCompleted}
-               />
-            }
+            <ImageCropModal base64Image={this.state.selectedImageBase64}
+               toggle={() => this.setState({ isOpenImageCropModal: !isOpenImageCropModal })}
+               isOpen={isOpenImageCropModal}
+               onCancel={() => this.setState({ isOpenImageCropModal: false })}
+               onCropComplete={this.onCropCompleted}
+            />
          </div>
       );
    }
@@ -131,9 +138,11 @@ export const DropdownInput = (props) => {
          <select id={id}
             onChange={props.onChange}
             className={"form-control " + props.inputCss}>
+            <option disabled children={props.placeholder || `Choose ${props.lblText}`}
+               selected={!(props.selectedValue == null) && props.selectedValue !== '' ? false : true} />
             {props.list.map(i =>
                <option value={i.id} key={i.name} children={i.name}
-                  selected={i.id === props.selectedValue ? true : false}
+                  selected={i.id === props.selectedValue || i.name === props.selectedValue ? true : false}
                   onClick={() => props.onSelect(i)}
                />
             )}

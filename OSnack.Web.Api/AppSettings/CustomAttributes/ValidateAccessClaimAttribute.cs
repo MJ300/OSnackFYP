@@ -23,7 +23,7 @@ namespace Shared.Lib.CustomValidationAttributes
                 case oAppConst.AccessClaims.Customer:
                     return true;
             }
-            ErrorMessage = "Invalid Access Claim Level";
+            ErrorMessage = "Invalid Access Claim";
             return false;
         }
     }

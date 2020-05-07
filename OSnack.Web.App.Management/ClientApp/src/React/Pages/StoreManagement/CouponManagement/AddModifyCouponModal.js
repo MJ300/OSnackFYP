@@ -7,56 +7,56 @@ import ModalBody from 'reactstrap/lib/ModalBody';
 import { AlertTypes, oError } from '../../../../_CoreFiles/CommonJs/AppConst.Shared';
 import { PageHeader, Alert } from '../../../Components/Text-OSnack';
 import { Button, ButtonPopupConfirm } from '../../../Components/Buttons-OSnack';
-import { oStore } from '../../../../_CoreFiles/CommonJs/Models-OSnack';
+import { oCoupon } from '../../../../_CoreFiles/CommonJs/Models-OSnack';
 import { Input } from '../../../Components/Inputs-OSnack';
-import { putStore, postStore, deleteStore } from '../../../../Redux/Actions/StoreManagementAction';
+import { putCoupon, postCoupon, deleteCoupon } from '../../../../Redux/Actions/CouponManagementAction';
 
-class AddModifyStoreModal extends PureComponent {
+class AddModifyCouponModal extends PureComponent {
    constructor(props) {
       super(props);
       this.state = {
          alertList: [],
          alertType: AlertTypes.Error,
-         store: new oStore(),
+         coupon: new oCoupon(),
       };
       this.resetAlert = this.resetAlert.bind(this);
       this.checkApiCallResult = this.checkApiCallResult.bind(this);
    }
    async componentDidUpdate() {
-      if (this.state.store.id !== this.props.store.id) {
+      if (this.state.coupon.id !== this.props.coupon.id) {
          try {
-            this.state.store = this.props.store;
+            this.state.coupon = this.props.coupon;
             this.forceUpdate();
          } catch (e) { }
       }
       if (!this.props.isOpen) {
          this.state.alertList = [];
-         this.state.store = new oStore();
+         this.state.coupon = new oCoupon();
       }
    }
 
 
-   async deleteStore() {
+   async deleteCoupon() {
       this.resetAlert();
-      await this.props.deleteStore(this.state.store,
+      await this.props.deleteCoupon(this.state.coupon,
          this.checkApiCallResult,
-         ["Store was deleted"]);
+         ["Coupon was deleted"]);
 
       try {
          await this.props.onActionCompleted();
       } catch (e) { }
    }
-   async submitStore() {
+   async submitCoupon() {
       this.resetAlert();
-      if (this.state.store.id > 0) {
-         await this.props.putStore(this.state.store,
+      if (this.state.coupon.id > 0) {
+         await this.props.putCoupon(this.state.coupon,
             this.checkApiCallResult,
-            ["Store Updated"]
+            ["Coupon Updated"]
          );
-      } else if (this.state.store.id === 0) {
-         await this.props.postStore(this.state.store,
+      } else if (this.state.coupon.id === 0) {
+         await this.props.postCoupon(this.state.coupon,
             this.checkApiCallResult,
-            ["New store was created"]
+            ["New coupon was created"]
          );
       }
 
@@ -72,7 +72,7 @@ class AddModifyStoreModal extends PureComponent {
       }
 
       this.setState({
-         store: result.store == null ? new oStore() : result.store,
+         coupon: result.coupon == null ? new oCoupon() : result.coupon,
          alertList: [new oError({ key: "s", value: successMessage })],
          alertType: AlertTypes.Success
       });
@@ -85,33 +85,33 @@ class AddModifyStoreModal extends PureComponent {
    render() {
       if (!this.props.isOpen) {
          this.state.alertList = [];
-         this.state.store = new oStore();
+         this.state.coupon = new oCoupon();
       }
-      let isNewStore = true;
-      if (this.state.store.id > 0)
-         isNewStore = false;
+      let isNewCoupon = true;
+      if (this.state.coupon.id > 0)
+         isNewCoupon = false;
 
       return (
          <Modal isOpen={this.props.isOpen} toggle={this.props.toggle}
             className='modal-dialog modal-dialog-centered' >
             <ModalBody>
-               <PageHeader title={isNewStore ? "New Store" : "Update Store"} />
+               <PageHeader title={isNewCoupon ? "New Coupon" : "Update Coupon"} />
                {/***** Status ****/}
                <label children="Status" className="col-2 p-0" />
-               {!this.state.store.status ?
+               {!this.state.coupon.status ?
                   <button className="col-10 mt-2 btn btn-sm btn-danger m-0"
-                     onClick={() => { this.state.store.status = true; this.forceUpdate(); }}>
+                     onClick={() => { this.state.coupon.status = true; this.forceUpdate(); }}>
                      Deactive</button>
                   :
                   <button className="col-10 mt-2 btn btn-sm btn-success m-0"
-                     onClick={() => { this.state.store.status = false; this.forceUpdate(); }}>
+                     onClick={() => { this.state.coupon.status = false; this.forceUpdate(); }}>
                      Active</button>
                }
                <Row>
                   <Input lblText="Name"
-                     key={this.state.store.id}
-                     bindedValue={this.state.store.name}
-                     onChange={i => this.state.store.name = i.target.value}
+                     key={this.state.coupon.id}
+                     bindedValue={this.state.coupon.name}
+                     onChange={i => this.state.coupon.name = i.target.value}
                      className="col-12" />
                </Row>
 
@@ -123,28 +123,28 @@ class AddModifyStoreModal extends PureComponent {
                {/***** buttons ****/}
                <Row className="col-12 p-0 m-0 mt-2">
                   <Button title="Cancel"
-                     className={isNewStore ? "col-12 mt-2 btn-white col-sm-6" : "col-12 mt-2 btn-white col-sm-4"}
+                     className={isNewCoupon ? "col-12 mt-2 btn-white col-sm-6" : "col-12 mt-2 btn-white col-sm-4"}
                      onClick={this.props.onCancel} />
-                  {!isNewStore &&
+                  {!isNewCoupon &&
                      <div className="col-12 col-sm-8 p-0 m-0">
                         <ButtonPopupConfirm title="Delete"
                            popupMessage="Are you sure?"
                            className="col-12 col-sm-6 mt-2"
                            btnClassName="btn-red"
-                           onConfirmClick={this.deleteStore.bind(this)}
+                           onConfirmClick={this.deleteCoupon.bind(this)}
                         />
                         <ButtonPopupConfirm title="Update"
                            popupMessage="Are you sure?"
                            className="col-12 mt-2 col-sm-6"
                            btnClassName="btn-green"
-                           onConfirmClick={this.submitStore.bind(this)}
+                           onConfirmClick={this.submitCoupon.bind(this)}
                         />
                      </div>
                   }
-                  {isNewStore &&
+                  {isNewCoupon &&
                      <Button title="Create"
                         className="col-12 mt-2 btn-green col-sm-6"
-                        onClick={this.submitStore.bind(this)} />
+                        onClick={this.submitCoupon.bind(this)} />
                   }
                </Row>
             </ModalBody>
@@ -157,14 +157,14 @@ const mapStateToProps = (state) => {
    return {
    };
 };
-/// Map actions (which may include dispatch to redux store) to component
+/// Map actions (which may include dispatch to redux coupon) to component
 const mapDispatchToProps = {
-   putStore,
-   postStore,
-   deleteStore,
+   putCoupon,
+   postCoupon,
+   deleteCoupon,
 };
 /// Redux Connection before exporting the component
 export default connect(
    mapStateToProps,
    dispatch => bindActionCreators(mapDispatchToProps, dispatch)
-)(AddModifyStoreModal);
+)(AddModifyCouponModal);

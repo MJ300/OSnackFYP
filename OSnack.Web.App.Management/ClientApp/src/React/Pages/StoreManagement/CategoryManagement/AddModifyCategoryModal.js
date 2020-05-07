@@ -21,38 +21,40 @@ class AddModifyCategoryModal extends PureComponent {
          category: new oCategory(),
       };
 
-      this.resetAlert = this.resetAlert.bind(this);
       this.checkApiCallResult = this.checkApiCallResult.bind(this);
       this.deleteCategory = this.deleteCategory.bind(this);
       this.submitCategory = this.submitCategory.bind(this);
    }
-   async componentDidMount() {
-      this.state.category = this.props.category;
-      try {
-         await getBase64fromUrlImage(API_URL + this.props.category.imagePath)
-            .then(imgBase64 => {
-               this.state.category.imageBase64 = imgBase64;
-            });
-      } catch (e) { }
-      this.forceUpdate();
+   async componentDidUpdate() {
+      if (this.state.category.id !== this.props.category.id) {
+         try {
+            this.state.category = this.props.category;
+            await getBase64fromUrlImage(API_URL + this.props.category.imagePath)
+               .then(imgBase64 => {
+                  this.state.category.imageBase64 = imgBase64;
+                  this.forceUpdate();
+               }).catch(() => {
+                  this.forceUpdate();
+               });
+         } catch (e) { }
+      }
+      if (!this.props.isOpen) {
+         this.state.alertList = [];
+         this.state.category = new oCategory();
+      }
    }
 
    async deleteCategory() {
-      this.resetAlert();
       await this.props.deleteCategory(this.state.category,
          this.checkApiCallResult,
          ["Category was deleted"]);
-
-      try {
-         await this.props.onActionCompleted();
-      } catch (e) { }
+      this.state.category.id = 0;
    }
    async submitCategory() {
       const { category, selectedImageBase64 } = this.state;
-      this.resetAlert();
 
       /// if the selected image is not null
-      /// then pass it as the selected image for the 
+      /// then pass it as the selected image for the
       /// category object being sent to the server
       if (!(selectedImageBase64 == null))
          category.imageBase64 = selectedImageBase64;
@@ -61,7 +63,7 @@ class AddModifyCategoryModal extends PureComponent {
       /// then try to update the category
       if (category.id > 0) {
          await this.props.putCategory(category,
-            this.checkApiCallResult,
+            await this.checkApiCallResult,
             ["Category Updated"]
          );
       }
@@ -69,19 +71,15 @@ class AddModifyCategoryModal extends PureComponent {
       /// then try to create a new record
       else if (category.id === 0) {
          await this.props.postCategory(category,
-            this.checkApiCallResult,
+            await this.checkApiCallResult,
             ["New category was created"]
          );
       }
-
-      /// Invoke the on action completed method of the parent 
-      /// element if there is any provided otherwise catch the error
-      try {
-         await this.props.onActionCompleted();
-      } catch (e) { }
    }
+   async checkApiCallResult(result, successMessage) {
+      this.state.alertList = [];
+      this.state.alertType = AlertTypes.Error;
 
-   checkApiCallResult(result, successMessage) {
       if (result.errors.length > 0) {
          this.setState({ alertList: result.errors, alertType: AlertTypes.Error });
          return;
@@ -92,24 +90,22 @@ class AddModifyCategoryModal extends PureComponent {
          alertList: [new oError({ key: "s", value: successMessage })],
          alertType: AlertTypes.Success
       });
-   }
-   resetAlert() {
-      this.state.alertList = [];
-      this.state.alertType = AlertTypes.Error;
+      /// Invoke the on action completed method of the parent
+      /// element if there is any provided otherwise catch the error
+      try {
+         await this.props.onActionCompleted();
+      } catch (e) { }
    }
    render() {
-      const { alertList, alertType, category } = this.state;
-      const { isOpen } = this.props;
-      if (!isOpen) {
-         alertList = [];
-         category = new oCategory();
-      }
+      let { alertList, alertType, category } = this.state;
+      const { isOpen, toggle } = this.props;
+
       let isNewCategory = true;
       if (category.id > 0)
          isNewCategory = false;
 
       return (
-         <Modal isOpen={isOpen}
+         <Modal isOpen={isOpen} toggle={toggle}
             className='modal-dialog modal-dialog-centered' >
             <ModalBody>
                <PageHeader title={isNewCategory ? "New Category" : "Update Category"} />
@@ -149,7 +145,6 @@ class AddModifyCategoryModal extends PureComponent {
                      onChange={i => category.unit = i.target.value}
                      list={ProductUnitType}
                      onSelect={i => category.unit = i.id}
-
                   />
                </Row>
 
@@ -190,13 +185,12 @@ class AddModifyCategoryModal extends PureComponent {
                         onClick={this.submitCategory} />
                   }
                </Row>
-
-
             </ModalBody>
          </Modal>
       );
    }
 }
+
 /// Mapping the redux state with component's properties
 const mapStateToProps = (state) => {
    return {

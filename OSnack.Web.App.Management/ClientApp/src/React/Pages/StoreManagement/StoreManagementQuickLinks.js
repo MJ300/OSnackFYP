@@ -3,7 +3,7 @@ import { Row, Container } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { PageHeader } from '../../Components/Text-OSnack';
 
-const StoreQuickLinks = (props) => {
+const StoreManagementQuickLinks = (props) => {
    return (
       <Container className="custom-container">
          <Row className="col-12 col-md-10 col-lg-8 p-3 pb-4 bg-white ml-auto mr-auto">
@@ -15,7 +15,9 @@ const StoreQuickLinks = (props) => {
                      className="col-12 mt-2 btn btn-lg btn-green" />
                   <Link children="Category Management" to="/CategoryManagement"
                      className="col-12 mt-2 btn btn-lg btn-green" />
-                  <Link children="Storage Management" to="/StorageManagement"
+                  <Link children="Coupon Management" to="/CouponManagement"
+                     className="col-12 mt-2 btn btn-lg btn-green" />
+                  <Link children="Store Management" to="/StoreManagement"
                      className="col-12 mt-2 btn btn-lg btn-green" />
                </div>
             </Row>
@@ -23,4 +25,4 @@ const StoreQuickLinks = (props) => {
       </Container>
    );
 };
-export default StoreQuickLinks;
+export default StoreManagementQuickLinks;

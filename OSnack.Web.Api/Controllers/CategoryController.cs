@@ -218,6 +218,8 @@ namespace OSnack.Web.Api.Controllers
                 {
                     try
                     {
+                        oAppFunc.DeleteImage(modifiedCategory.ImagePath, WebHost.WebRootPath);
+
                         modifiedCategory.ImagePath = oAppFunc.SaveImageToWWWRoot(modifiedCategory.Name,
                                 WebHost.WebRootPath,
                                 modifiedCategory.ImageBase64,

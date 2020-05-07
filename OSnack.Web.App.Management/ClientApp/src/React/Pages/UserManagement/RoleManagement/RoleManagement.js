@@ -4,54 +4,58 @@ import { bindActionCreators } from 'redux';
 import { Container, Row, Table } from 'reactstrap';
 import { PageHeader, Alert } from '../../../Components/Text-OSnack';
 import { Input } from '../../../Components/Inputs-OSnack';
-import { Button } from '../../../Components/Buttons-OSnack';
-import { oStore } from '../../../../_CoreFiles/CommonJs/Models-OSnack';
-import AddModifyStoreModal from './AddModifyStoreModal';
-import { getStores } from '../../../../Redux/Actions/StoreManagementAction';
-import { AlertTypes, GetAllRecords, ConstMaxNumberOfPerItemsPage } from '../../../../_CoreFiles/CommonJs/AppConst.Shared';
+import { Button, DropdownBtn } from '../../../Components/Buttons-OSnack';
+import { oRole } from '../../../../_CoreFiles/CommonJs/Models-OSnack';
+import AddModifyRoleModal from './AddModifyRoleModal';
+import { getRoles } from '../../../../Redux/Actions/RoleManagementAction';
+import { AlertTypes, GetAllRecords, ConstMaxNumberOfPerItemsPage, AccessClaims } from '../../../../_CoreFiles/CommonJs/AppConst.Shared';
 import { Pagination } from '../../../Components/Misc-OSnack';
 
-class StoreManagement extends PureComponent {
+class RoleManagement extends PureComponent {
    constructor(props) {
       super(props);
       this.state = {
          alertList: [],
          alertType: AlertTypes.Error,
-         storeList: [],
+         roleList: [],
+         selectedRole: new oRole(),
+         filterAccessClaimValue: GetAllRecords,
          searchValue: '',
-         isOpenStoreModal: false,
-         selectedStore: new oStore(),
+         isOpenRoleModal: false,
          listTotalCount: 0,
          SelectedPage: 1,
          MaxNumberPerItemsPage: ConstMaxNumberOfPerItemsPage
       };
 
-      this.editStore = this.editStore.bind(this);
+      this.editRole = this.editRole.bind(this);
       this.search = this.search.bind(this);
    }
+
    async search(SelectedPage, MaxNumberPerItemsPage) {
       if (!(SelectedPage == null))
          this.state.SelectedPage = SelectedPage;
       if (!(MaxNumberPerItemsPage == null))
          this.state.MaxNumberPerItemsPage = MaxNumberPerItemsPage;
-
       let searchVal = GetAllRecords;
       if (this.state.searchValue != null && this.state.searchValue != '')
          searchVal = this.state.searchValue;
 
-      await this.props.getStores(this.state.SelectedPage, this.state.MaxNumberPerItemsPage, searchVal,
+      await this.props.getRoles(
+         this.state.SelectedPage,
+         this.state.MaxNumberPerItemsPage,
+         searchVal,
+         this.state.filterAccessClaimValue,
          ((result) => {
             if (result.errors.length > 0) {
                this.setState({ alertList: result.errors });
                return;
             }
-            this.setState({ storeList: result.storeList, listTotalCount: result.totalCount });
+            this.setState({ roleList: result.roleList, listTotalCount: result.totalCount });
          }).bind(this));
    }
 
-   async editStore(store) {
-      console.log(store);
-      this.setState({ selectedStore: store, isOpenStoreModal: true });
+   async editRole(role) {
+      this.setState({ selectedRole: role, isOpenRoleModal: true });
    }
 
    render() {
@@ -59,7 +63,7 @@ class StoreManagement extends PureComponent {
          <Container className="custom-container">
             <Row className="mt-2">
                <Row className="col-12 col-md-10 col-lg-8 p-3 mb-3 bg-white ml-auto mr-auto">
-                  <PageHeader title="Store Management" />
+                  <PageHeader title="Role Management" />
                   {/***** Controls  ****/}
                   <Row className="col-12 p-0 m-0">
                      <Alert alertItemList={this.state.alertList}
@@ -82,33 +86,61 @@ class StoreManagement extends PureComponent {
                         onClick={async () => await this.search(this.state.SelectedPage, this.state.MaxNumberPerItemsPage)}
                      />
 
-                     <Button title="New Store"
+                     <Button title="New Role"
                         className="col-12 col-md-4 mt-2 mt-md-0 btn-green btn-lg"
-                        onClick={() => this.setState({ isOpenStoreModal: true })}
+                        onClick={() => this.setState({ isOpenRoleModal: true })}
                      />
                   </Row>
 
-                  {/***** Store Table  ****/}
+                  {/***** Filter Drop-downs ****/}
+                  <Row className="col-12 m-0 p-0 mt-2 mb-2">
+                     <label className="col-auto align-self-center" children="Filter by: " />
+                     <DropdownBtn
+                        title={this.state.filterAccessClaimValue === GetAllRecords
+                           ? <React.Fragment>Access Claim Type: ( All ) </React.Fragment>
+                           : <React.Fragment>Access Claim Type: ( {this.state.filterAccessClaimValue} )</React.Fragment>
+                        }
+                        className="col-12 col-md-auto mt-2 pl-md-1 pr-md-1 mt-md-0"
+                        btnClassName="btn-white"
+                        spanClassName="text-center dropdown-menu-right bg-white"
+                        body={
+                           <div>
+                              {AccessClaims.List.map(i =>
+                                 <a key={i}
+                                    className="dropdown-item text-nav"
+                                    onClick={() => this.setState({ filterAccessClaimValue: i.name })}
+                                    children={i.name}
+                                 />
+                              )}
+                              <a className="dropdown-item text-nav"
+                                 onClick={() => this.setState({ filterAccessClaimValue: GetAllRecords })}
+                                 children='All' />
+                           </div>
+                        }
+                     />
+                  </Row>
+
+                  {/***** Role Table  ****/}
                   <Row className="col-12 p-0 m-0">
                      <Table className="col-12 text-center" striped responsive>
                         <thead>
                            <tr>
-                              <th>Store Name</th>
-                              <th>Status</th>
+                              <th>Role Name</th>
+                              <th>Access Claim</th>
                               <th></th>
                            </tr>
                         </thead>
-                        {this.state.storeList.length > 0 &&
+                        {this.state.roleList.length > 0 &&
                            <tbody>
-                              {this.state.storeList.map((i) => {
+                              {this.state.roleList.map((i) => {
                                  return (
                                     <tr key={i.id}>
                                        <td>{i.name}</td>
-                                       <td>{i.status ? "Active" : "Disabled"}</td>
+                                       <td>{i.accessClaim}</td>
                                        <td>
                                           <div className="p-0 m-0">
                                              <button className="btn btn-sm btn-blue col-12 m-0"
-                                                onClick={() => this.editStore(i)}>
+                                                onClick={() => this.editRole(i)}>
                                                 Edit</button>
                                           </div>
                                        </td>
@@ -123,11 +155,11 @@ class StoreManagement extends PureComponent {
                         setList={this.search}
                         listCount={this.state.listTotalCount} />
                   </Row>
-                  <AddModifyStoreModal isOpen={this.state.isOpenStoreModal}
-                     toggle={i => this.setState({ isOpenStoreModal: !this.state.isOpenStoreModal })}
-                     store={this.state.selectedStore}
+                  <AddModifyRoleModal isOpen={this.state.isOpenRoleModal}
+                     toggle={i => this.setState({ isOpenRoleModal: !this.state.isOpenRoleModal })}
+                     role={this.state.selectedRole}
                      onActionCompleted={this.search}
-                     onCancel={() => this.setState({ isOpenStoreModal: false, selectedStore: new oStore() })}
+                     onCancel={() => this.setState({ isOpenRoleModal: false, selectedRole: new oRole() })}
                   />
                </Row>
             </Row>
@@ -140,12 +172,12 @@ const mapStateToProps = (state) => {
    return {
    };
 };
-/// Map actions (which may include dispatch to redux store) to component
+/// Map actions (which may include dispatch to redux role) to component
 const mapDispatchToProps = {
-   getStores,
+   getRoles,
 };
 /// Redux Connection before exporting the component
 export default connect(
    mapStateToProps,
    dispatch => bindActionCreators(mapDispatchToProps, dispatch)
-)(StoreManagement);
+)(RoleManagement);

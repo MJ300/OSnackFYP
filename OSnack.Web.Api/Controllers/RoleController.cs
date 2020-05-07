@@ -6,12 +6,14 @@ using OSnack.Web.Api.Database.Context;
 using OSnack.Web.Api.Database.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using static OSnack.Web.Api.AppSettings.oAppFunc;
 
 namespace OSnack.Web.Api.Controllers
 {
+    [Route("[controller]")]
     public class RoleController : ControllerBase
     {
         private AppDbContext DbContext { get; }
@@ -22,6 +24,72 @@ namespace OSnack.Web.Api.Controllers
         /// </summary>
         /// <param name="db">Receive the AppDbContext instance from the ASP.Net Pipeline</param>
         public RoleController(AppDbContext db) => DbContext = db;
+
+        /// <summary>
+        /// Get all the Roles.
+        /// </summary>
+        #region *** 200 OK, 417 ExpectationFailed ***
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
+        #endregion
+        [HttpGet("[action]/All")]
+        // [Authorize(oAppConst.AccessPolicies.LevelTwo)] /// Done
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                /// return the list of All Roles
+                return Ok(await DbContext.Roles.ToListAsync().ConfigureAwait(false));
+            }
+            catch (Exception) //ArgumentNullException
+            {
+                /// in the case any exceptions return the following error
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                return StatusCode(417, ErrorsList);
+            }
+        }
+
+        /// <summary>
+        /// Search or get all the Roles.
+        /// search by name or filter by access claim
+        /// </summary>
+        #region *** 200 OK, 417 ExpectationFailed ***
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
+        #endregion
+        [HttpGet("[action]/{selectedPage}/{maxNumberPerItemsPage}/{searchValue}/{filterAccessClaim}")]
+        // [Authorize(oAppConst.AccessPolicies.LevelTwo)] /// Done
+        public async Task<IActionResult> Get(
+            int selectedPage,
+            int maxNumberPerItemsPage,
+            string searchValue = "",
+            string filterAccessClaim = "")
+        {
+            try
+            {
+                int totalCount = await DbContext.Roles
+                    .Where(r => filterAccessClaim.Equals(oAppConst.GetAllRecords) ? true : r.AccessClaim.Equals(filterAccessClaim))
+                    .CountAsync(r => searchValue.Equals(oAppConst.GetAllRecords) ? true : r.Name.Contains(searchValue))
+                    .ConfigureAwait(false);
+
+                List<oRole> list = await DbContext.Roles
+                    .OrderBy(c => c.Name)
+                    .Where(r => filterAccessClaim.Equals(oAppConst.GetAllRecords) ? true : r.AccessClaim.Equals(filterAccessClaim))
+                    .Where(r => searchValue.Equals(oAppConst.GetAllRecords) ? true : r.Name.Contains(searchValue))
+                    .Skip((selectedPage - 1) * maxNumberPerItemsPage)
+                    .Take(maxNumberPerItemsPage)
+                    .ToListAsync()
+                    .ConfigureAwait(false);
+                /// return the list of Roles
+                return Ok(new { list, totalCount });
+            }
+            catch (Exception) //ArgumentNullException
+            {
+                /// in the case any exceptions return the following error
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                return StatusCode(417, ErrorsList);
+            }
+        }
 
         /// <summary>
         ///     Create a new Role
@@ -48,7 +116,7 @@ namespace OSnack.Web.Api.Controllers
                 }
 
                 /// check the database to see if a role with the same name exists
-                if (!await DbContext.Categories.AnyAsync(d => d.Name == newRole.Name).ConfigureAwait(false))
+                if (await DbContext.Categories.AnyAsync(d => d.Name.Equals(newRole.Name)).ConfigureAwait(false))
                 {
                     /// extract the errors and return bad request containing the errors
                     oAppFunc.Error(ref ErrorsList, "Role already exists.");
@@ -99,7 +167,7 @@ namespace OSnack.Web.Api.Controllers
                 }
 
                 /// check the database to see if a Category with the same name exists
-                if (!await DbContext.Categories.AnyAsync(d => d.Name == modifiedRole.Name).ConfigureAwait(false))
+                if (await DbContext.Categories.AnyAsync(d => d.Name == modifiedRole.Name).ConfigureAwait(false))
                 {
                     /// extract the errors and return bad request containing the errors
                     oAppFunc.Error(ref ErrorsList, "Role already exists.");

@@ -104,13 +104,13 @@ export class DropdownBtn extends PureComponent {
       const { id, isOpenDropdown } = this.state;
       const { className, title, btnClassName, spanClassName, body } = this.props;
       return (
-         <div className={"btn-group dropdown p-0 " + className} ref={this.toggleDropdown}>
-            <button id={id} type="button" children={title}
+         <div className={"dropdown p-0 " + className}>
+            <button id={id} type="button" children={title} ref={this.toggleDropdown}
                className={"dropdown-toggle btn col m-0 " + btnClassName}
                onClick={() => this.setState({ isOpenDropdown: !isOpenDropdown })}
             />
             <span aria-labelledby={id}
-               className={`dropdown-menu ${isOpenDropdown ? "show" : ""}  w-100 ` + spanClassName}
+               className={`dropdown-menu dd-border ${isOpenDropdown ? "show" : ""}  w-100 ` + spanClassName}
                children={body}
             />
          </div>

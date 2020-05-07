@@ -14,14 +14,14 @@ namespace OSnack.Web.Api.AppSettings
     public static class oAppFunc
     {
         public static void DeleteImage(string path, string webRootPath) =>
-            Directory.Delete(string.Format(@"{0}\{1}", webRootPath, path), true);
+            File.Delete(string.Format(@"{0}\{1}", webRootPath, path));
 
         public static string SaveImageToWWWRoot(string fileName, string webRootPath, string imgBase64, string folderName)
         {
             byte[] imgBytes = Convert.FromBase64String(imgBase64.Split("base64,")[1]);
 
             var SelectedFolder = Path.Combine(webRootPath, string.Format(folderName));
-            var path = string.Format(@"{0}\{1}.png", SelectedFolder, fileName);
+            var path = string.Format(@"{0}\{1}-{2}.png", SelectedFolder, fileName, new Random().Next(0, 100));
 
             if (!Directory.Exists(SelectedFolder))
                 Directory.CreateDirectory(SelectedFolder);

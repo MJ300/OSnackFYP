@@ -73,7 +73,6 @@ export const getBase64fromUrlImage = url =>
          let ctx = canvas.getContext("2d");
          ctx.drawImage(image, 0, 0);
          var imgBase64 = canvas.toDataURL();
-         console.log(imgBase64);
          resolve(imgBase64);
       };
       image.onerror = error => reject(error);

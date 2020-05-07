@@ -4,59 +4,60 @@ import { bindActionCreators } from 'redux';
 import { Row } from 'reactstrap';
 import Modal from 'reactstrap/lib/Modal';
 import ModalBody from 'reactstrap/lib/ModalBody';
-import { AlertTypes, oError } from '../../../../_CoreFiles/CommonJs/AppConst.Shared';
+import { AlertTypes, oError, AccessClaims } from '../../../../_CoreFiles/CommonJs/AppConst.Shared';
 import { PageHeader, Alert } from '../../../Components/Text-OSnack';
 import { Button, ButtonPopupConfirm } from '../../../Components/Buttons-OSnack';
-import { oStore } from '../../../../_CoreFiles/CommonJs/Models-OSnack';
-import { Input } from '../../../Components/Inputs-OSnack';
-import { putStore, postStore, deleteStore } from '../../../../Redux/Actions/StoreManagementAction';
+import { oRole } from '../../../../_CoreFiles/CommonJs/Models-OSnack';
+import { Input, DropdownInput } from '../../../Components/Inputs-OSnack';
+import { putRole, postRole, deleteRole } from '../../../../Redux/Actions/RoleManagementAction';
 
-class AddModifyStoreModal extends PureComponent {
+class AddModifyRoleModal extends PureComponent {
    constructor(props) {
       super(props);
       this.state = {
          alertList: [],
          alertType: AlertTypes.Error,
-         store: new oStore(),
+         role: new oRole(),
       };
       this.resetAlert = this.resetAlert.bind(this);
       this.checkApiCallResult = this.checkApiCallResult.bind(this);
    }
    async componentDidUpdate() {
-      if (this.state.store.id !== this.props.store.id) {
+      if (this.state.role.id !== this.props.role.id) {
          try {
-            this.state.store = this.props.store;
+            this.state.role = this.props.role;
             this.forceUpdate();
          } catch (e) { }
       }
       if (!this.props.isOpen) {
          this.state.alertList = [];
-         this.state.store = new oStore();
+         this.state.role = new oRole();
       }
    }
 
 
-   async deleteStore() {
+   async deleteRole() {
       this.resetAlert();
-      await this.props.deleteStore(this.state.store,
+      await this.props.deleteRole(this.state.role,
          this.checkApiCallResult,
-         ["Store was deleted"]);
+         ["Role was deleted"]);
 
       try {
          await this.props.onActionCompleted();
       } catch (e) { }
    }
-   async submitStore() {
+   async submitRole() {
+      console.log();
       this.resetAlert();
-      if (this.state.store.id > 0) {
-         await this.props.putStore(this.state.store,
+      if (this.state.role.id > 0) {
+         await this.props.putRole(this.state.role,
             this.checkApiCallResult,
-            ["Store Updated"]
+            ["Role Updated"]
          );
-      } else if (this.state.store.id === 0) {
-         await this.props.postStore(this.state.store,
+      } else if (this.state.role.id === 0) {
+         await this.props.postRole(this.state.role,
             this.checkApiCallResult,
-            ["New store was created"]
+            ["New role was created"]
          );
       }
 
@@ -72,7 +73,7 @@ class AddModifyStoreModal extends PureComponent {
       }
 
       this.setState({
-         store: result.store == null ? new oStore() : result.store,
+         role: result.role == null ? new oRole() : result.role,
          alertList: [new oError({ key: "s", value: successMessage })],
          alertType: AlertTypes.Success
       });
@@ -85,33 +86,30 @@ class AddModifyStoreModal extends PureComponent {
    render() {
       if (!this.props.isOpen) {
          this.state.alertList = [];
-         this.state.store = new oStore();
+         this.state.role = new oRole();
       }
-      let isNewStore = true;
-      if (this.state.store.id > 0)
-         isNewStore = false;
+      let isNewRole = true;
+      if (this.state.role.id > 0)
+         isNewRole = false;
 
       return (
          <Modal isOpen={this.props.isOpen} toggle={this.props.toggle}
             className='modal-dialog modal-dialog-centered' >
             <ModalBody>
-               <PageHeader title={isNewStore ? "New Store" : "Update Store"} />
-               {/***** Status ****/}
-               <label children="Status" className="col-2 p-0" />
-               {!this.state.store.status ?
-                  <button className="col-10 mt-2 btn btn-sm btn-danger m-0"
-                     onClick={() => { this.state.store.status = true; this.forceUpdate(); }}>
-                     Deactive</button>
-                  :
-                  <button className="col-10 mt-2 btn btn-sm btn-success m-0"
-                     onClick={() => { this.state.store.status = false; this.forceUpdate(); }}>
-                     Active</button>
-               }
+               <PageHeader title={isNewRole ? "New Role" : "Update Role"} />
+
                <Row>
-                  <Input lblText="Name"
-                     key={this.state.store.id}
-                     bindedValue={this.state.store.name}
-                     onChange={i => this.state.store.name = i.target.value}
+                  <DropdownInput className="col-12" lblText="Access Claim"
+                     selectedValue={this.state.role.accessClaim}
+                     onChange={i => this.state.role.accessClaim = AccessClaims.List[i.target.value].name}
+                     lblDisabled
+                     list={AccessClaims.List}
+                     onSelect={claim => this.state.role.accessClaim = claim.name}
+                  />
+                  <Input lblText="Role Name"
+                     key={this.state.role.id}
+                     bindedValue={this.state.role.name}
+                     onChange={i => this.state.role.name = i.target.value}
                      className="col-12" />
                </Row>
 
@@ -123,28 +121,28 @@ class AddModifyStoreModal extends PureComponent {
                {/***** buttons ****/}
                <Row className="col-12 p-0 m-0 mt-2">
                   <Button title="Cancel"
-                     className={isNewStore ? "col-12 mt-2 btn-white col-sm-6" : "col-12 mt-2 btn-white col-sm-4"}
+                     className={isNewRole ? "col-12 mt-2 btn-white col-sm-6" : "col-12 mt-2 btn-white col-sm-4"}
                      onClick={this.props.onCancel} />
-                  {!isNewStore &&
+                  {!isNewRole &&
                      <div className="col-12 col-sm-8 p-0 m-0">
                         <ButtonPopupConfirm title="Delete"
                            popupMessage="Are you sure?"
                            className="col-12 col-sm-6 mt-2"
                            btnClassName="btn-red"
-                           onConfirmClick={this.deleteStore.bind(this)}
+                           onConfirmClick={this.deleteRole.bind(this)}
                         />
                         <ButtonPopupConfirm title="Update"
                            popupMessage="Are you sure?"
                            className="col-12 mt-2 col-sm-6"
                            btnClassName="btn-green"
-                           onConfirmClick={this.submitStore.bind(this)}
+                           onConfirmClick={this.submitRole.bind(this)}
                         />
                      </div>
                   }
-                  {isNewStore &&
+                  {isNewRole &&
                      <Button title="Create"
                         className="col-12 mt-2 btn-green col-sm-6"
-                        onClick={this.submitStore.bind(this)} />
+                        onClick={this.submitRole.bind(this)} />
                   }
                </Row>
             </ModalBody>
@@ -157,14 +155,14 @@ const mapStateToProps = (state) => {
    return {
    };
 };
-/// Map actions (which may include dispatch to redux store) to component
+/// Map actions (which may include dispatch to redux role) to component
 const mapDispatchToProps = {
-   putStore,
-   postStore,
-   deleteStore,
+   putRole,
+   postRole,
+   deleteRole,
 };
 /// Redux Connection before exporting the component
 export default connect(
    mapStateToProps,
    dispatch => bindActionCreators(mapDispatchToProps, dispatch)
-)(AddModifyStoreModal);
+)(AddModifyRoleModal);
