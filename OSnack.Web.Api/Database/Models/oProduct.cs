@@ -21,7 +21,6 @@ namespace OSnack.Web.Api.Database.Models
         [StringLength(256, ErrorMessage = "Must be less than 256 Characters \n")]
         public string Description { get; set; } = "";
 
-        [Required(ErrorMessage = "Image is Required \n")]
         public string ImagePath { get; set; }
 
         [Column(TypeName = "decimal(7,2)")]
@@ -39,6 +38,7 @@ namespace OSnack.Web.Api.Database.Models
         [ForeignKey("CategoryId")]
         public oCategory Category { get; set; }
 
+        [JsonIgnore]
         [InverseProperty("Product")]
         public ICollection<oStoreProduct> StoreProducts { get; set; }
 

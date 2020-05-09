@@ -34,7 +34,6 @@ class CategoryManagement extends PureComponent {
 
    //#region *** *** Search the API for the selected page with...
    /// the maximum number of items search value specified. *** ***
-
    //#endregion
    async search(SelectedPage, MaxNumberPerItemsPage, category) {
 
@@ -79,7 +78,6 @@ class CategoryManagement extends PureComponent {
    }
 
    render() {
-
       return (
          <Container className="custom-container">
             <Row className="mt-2">

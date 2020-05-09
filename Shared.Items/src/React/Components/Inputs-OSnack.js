@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { AlertTypes, AccessClaims } from '../../_CoreFiles/CommonJs/AppConst.Shared';
+import { AlertTypes } from '../../_CoreFiles/CommonJs/AppConst.Shared';
 import { Button } from './Buttons-OSnack';
 import { ImageCropModal } from './Misc-OSnack';
 
@@ -17,6 +17,7 @@ export const Input = (props) => {
             defaultValue={props.bindedValue}
             placeholder={props.placeholder}
             onChange={props.onChange}
+            disabled={props.disabled || false}
          />
       </div>
    );
@@ -129,26 +130,25 @@ export class ImageUpload extends PureComponent {
 };
 
 export const DropdownInput = (props) => {
-   const id = Math.random();
-   return (
-      <div className={props.className}>
-         {!props.lblDisabled &&
-            <label htmlFor={id} className={"col-form-label " + props.lblCss}>{props.lblText}</label>
-         }
-         <select id={id}
-            onChange={props.onChange}
-            className={"form-control " + props.inputCss}>
-            <option disabled children={props.placeholder || `Choose ${props.lblText}`}
-               selected={!(props.selectedValue == null) && props.selectedValue !== '' ? false : true} />
-            {props.list.map(i =>
-               <option value={i.id} key={i.name} children={i.name}
-                  selected={i.id === props.selectedValue || i.name === props.selectedValue ? true : false}
-                  onClick={() => props.onSelect(i)}
-               />
-            )}
-         </select>
-      </div>
-   );
+    const id = Math.random();
+    return (
+        <div className={props.className}>
+            {!props.lblDisabled &&
+                <label htmlFor={id} className={"col-form-label " + props.lblCss}>{props.lblText}</label>
+            }
+            <select id={id}
+                onChange={i => props.onChange(JSON.parse(i.target.value))}
+                className={"form-control " + props.inputCss}>
+                <option disabled children={props.placeholder || `Choose ${props.lblText}`}
+                    selected={!(props.selectedValue == null) && props.selectedValue !== '' ? false : true} />
+                {props.list.map(i =>
+                    <option value={JSON.stringify(i)} key={i.name} children={i.name}
+                        selected={i.id === props.selectedValue || i.name === props.selectedValue ? true : false}
+                    />
+                )}
+            </select>
+        </div>
+    );
 };
 
 export const CheckBox = (props) => {

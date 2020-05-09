@@ -2,38 +2,91 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Container, Row, Table } from 'reactstrap';
-import { PageHeader } from '../../../Components/Text-OSnack';
+import { PageHeader, Alert } from '../../../Components/Text-OSnack';
 import { Input } from '../../../Components/Inputs-OSnack';
 import { Button, DropdownBtn } from '../../../Components/Buttons-OSnack';
-import { GetAllRecords } from '../../../../_CoreFiles/CommonJs/AppConst.Shared';
-import { oProduct, oStore, oCategory } from '../../../../_CoreFiles/CommonJs/Models-OSnack';
+import { AlertTypes, GetAllRecords, ProductUnitType, ConstMaxNumberOfPerItemsPage } from '../../../../_CoreFiles/CommonJs/AppConst.Shared';
+import { getProducts } from '../../../../Redux/Actions/ProductManagmentAction';
+import { oProduct } from '../../../../_CoreFiles/CommonJs/Models-OSnack';
 import AddModifyProductModal from './AddModifyProductModal';
+import { getAllStores } from '../../../../Redux/Actions/StoreManagementAction';
+import { getAllCategories } from '../../../../Redux/Actions/CategoryManagementAction';
+
 
 class ProductManagement extends PureComponent {
    constructor(props) {
       super(props);
       this.state = {
-         productList: [new oProduct({ id: 1, name: "test" })],
-         storeList: [new oStore({ id: 1, name: "test" })],
-         categoryList: [new oCategory()],
+         alertList: [],
+         alertType: AlertTypes.Error,
+         storeProductList: [],
+         storeList: [],
+         categoryList: [],
          searchValue: '',
          isOpenProductModal: false,
          selectedProduct: new oProduct(),
          selectedCategory: GetAllRecords,
          selectedStore: GetAllRecords,
-         selectedActiveStatus: GetAllRecords,
+         listTotalCount: 0,
+         SelectedPage: 1,
+         MaxNumberPerItemsPage: ConstMaxNumberOfPerItemsPage,
+         filterProductUnitValue: GetAllRecords,
+         filterStatus: GetAllRecords,
       };
 
       this.editProduct = this.editProduct.bind(this);
+      this.search = this.search.bind(this);
    }
    async componentDidMount() {
+      await this.props.getAllCategories(
+         ((result) => {
+            if (result.errors.length > 0) {
+               this.state.alertList = result.errors;
+               return;
+            }
+            this.state.categoryList = result.categoryList;
+         }).bind(this));
+
+      await this.props.getAllStores(
+         ((result) => {
+            if (result.errors.length > 0) {
+               this.state.alertList = result.errors;
+               return;
+            }
+            this.state.storeList = result.storeList;
+            this.state.selectedStore = result.storeList[0];
+         }).bind(this));
+      this.forceUpdate();
    }
 
-   async search() {
 
-   }
-   async activation() {
+   async search(SelectedPage, MaxNumberPerItemsPage) {
 
+      if (!(SelectedPage == null))
+         this.state.SelectedPage = SelectedPage;
+
+      if (!(MaxNumberPerItemsPage == null))
+         this.state.MaxNumberPerItemsPage = MaxNumberPerItemsPage;
+
+      let searchVal = GetAllRecords;
+      if (this.state.searchValue != null && this.state.searchValue != '')
+         searchVal = this.state.searchValue;
+
+      await this.props.getProducts(
+         this.state.SelectedPage,
+         this.state.MaxNumberPerItemsPage,
+         this.state.selectedStore.id,
+         this.state.selectedCategory,
+         searchVal,
+         this.state.filterProductUnitValue,
+         this.state.filterStatus,
+         ((result) => {
+            if (result.errors.length > 0) {
+               this.setState({ alertList: result.errors });
+               return;
+            }
+            this.setState({ storeProductList: result.storeProductList, listTotalCount: result.totalCount });
+         }).bind(this));
    }
    async editProduct(product) {
       this.setState({ selectedProduct: product, isOpenProductModal: true });
@@ -44,29 +97,39 @@ class ProductManagement extends PureComponent {
             <Row className="mt-2">
                <Row className="col-12 col-md-10 col-lg-8 p-3 mb-3 bg-white ml-auto mr-auto">
                   <PageHeader title="Product Management" />
-                  {/***** Controls  ****/}
-                  <Row className="col-12">
-                     {/***** Search Input  ****/}
+                  {/***** Search Input and new product button  ****/}
+                  <Row className="col-12 m-0 p-0">
+                     <Alert alertItemList={this.state.alertList}
+                        type={this.state.alertType}
+                        className="col-12 mb-2"
+                        onClosed={() => this.setState({ alertList: [] })}
+                     />
                      <Input placeholder="Search"
-                        onChange={i => this.state.searchValue = i.target.value}
+                        onChange={i => this.setState({ searchValue: i.target.value })}
                         bindedValue={this.state.searchValue}
-                        className="col-9 col-md-6 m-0 p-0"
+                        className="col-7 col-md-6 m-0 p-0"
                         inputClassName="form-control-lg"
                         inputCss="mt-1 m-0"
+                        keyVal="searchInput"
                         lblDisabled
                      />
-                     <Button title="Search" className="col-3 col-md-3 btn-green"
-                        onClick={this.search.bind(this)}
+                     <Button title={this.state.searchValue === '' ? 'Show All' : 'Search'}
+                        className="col-5 col-md-2 btn-green btn-lg"
+                        onClick={async () => await this.search(this.state.SelectedPage, this.state.MaxNumberPerItemsPage)}
                      />
 
                      <Button title="New Product"
-                        className="col-12 col-md-3 mt-4 mt-md-0 btn-green"
+                        className="col-12 col-md-4 mt-2 mt-md-0 btn-green btn-lg"
                         onClick={() => this.setState({ isOpenProductModal: true })}
                      />
                   </Row>
-                  <Row className="col-12 mt-2">
-                     <DropdownBtn title="Store"
-                        className="col-12 col-md-4 mt-2 pl-md-1 pr-md-1 mt-md-0"
+
+                  {/***** Filter drop-down menus  ****/}
+                  <Row className="col-12 m-0 p-0 mt-2 mb-2">
+                     <label className="col-auto align-self-center" children="Filter by: " />
+                     <DropdownBtn title={<React.Fragment>Store Name: ({this.state.selectedStore.name})</React.Fragment>
+                     }
+                        className="col-12 col-md mt-2 pl-md-1 pr-md-1 mt-md-0"
                         btnClassName="btn-white"
                         spanClassName="text-center dropdown-menu-right bg-white"
                         body={
@@ -74,19 +137,19 @@ class ProductManagement extends PureComponent {
                               {this.state.storeList.map(i =>
                                  <a key={i.name}
                                     className="dropdown-item text-nav"
-                                    onClick={i => this.state.selectedStore = i}
+                                    onClick={() => this.setState({ selectedStore: i })}
                                     children={i.name}
                                  />
 
                               )}
-                              <a className="dropdown-item text-nav"
-                                 onClick={i => this.state.selectedStore = GetAllRecords}
-                                 children='All' />
                            </div>
                         }
                      />
-                     <DropdownBtn title="Category"
-                        className="col-12 col-md-4 mt-2 pl-md-1 pr-md-1 mt-md-0"
+                     <DropdownBtn title={this.state.selectedCategory === GetAllRecords
+                        ? <React.Fragment>Category: (All) </React.Fragment>
+                        : <React.Fragment>Category: ({this.state.selectedCategory.name})</React.Fragment>
+                     }
+                        className="col-12 col-md mt-2 pl-md-1 pr-md-1 mt-md-0"
                         btnClassName="btn-white"
                         spanClassName="text-center dropdown-menu-right bg-white"
                         body={
@@ -94,35 +157,38 @@ class ProductManagement extends PureComponent {
                               {this.state.categoryList.map(i =>
                                  <a key={i.name}
                                     className="dropdown-item text-nav"
-                                    onClick={i => this.state.selectedCategory = i.id}
+                                    onClick={() => this.setState({ selectedCategory: i })}
                                     children={i.name}
                                  />
 
                               )}
                               <a className="dropdown-item text-nav"
-                                 onClick={i => this.state.selectedCategory = GetAllRecords}
+                                 onClick={i => this.setState({ selectedCategory: GetAllRecords })}
                                  children='All' />
                            </div>
                         }
                      />
 
-                     <DropdownBtn title="Status"
-                        className="col-12 col-md-4 mt-2 pr-md-1 mt-md-0"
+                     <DropdownBtn title={this.state.filterStatus === GetAllRecords
+                        ? <React.Fragment>Status: (All) </React.Fragment>
+                        : <React.Fragment>Status: ({this.state.filterStatus ? "Active" : "Disabled"})</React.Fragment>
+                     }
+                        className="col-12 col-md mt-2 pl-md-1 pr-md-1 mt-md-0"
                         btnClassName="btn-white"
                         spanClassName="text-center dropdown-menu-right bg-white"
                         body={
                            <div>
                               <a className="dropdown-item text-nav"
-                                 onClick={i => this.state.selectedActiveStatusDropdown = true}
+                                 onClick={i => this.setState({ filterStatus: true })}
                                  children="Active"
                               />
                               <a className="dropdown-item text-nav"
-                                 onClick={i => this.state.selectedActiveStatusDropdown = false}
+                                 onClick={i => this.setState({ filterStatus: false })}
                                  children="Disabled"
                               />
 
                               <a className="dropdown-item text-nav"
-                                 onClick={i => this.state.selectedActiveStatusDropdown = GetAllRecords}
+                                 onClick={i => this.setState({ filterStatus: GetAllRecords })}
                                  children='All' />
                            </div>
                         }
@@ -136,47 +202,40 @@ class ProductManagement extends PureComponent {
                      <Table className="col-12 text-center" striped responsive>
                         <thead>
                            <tr>
-                              <th>Name</th>
-                              <th>Category</th>
-                              <th>Status</th>
-                              <th></th>
-                              <th></th>
+                              <th className="underline"><a>Name</a></th>
+                              <th className="">Category</th>
+                              <th className="">Price</th>
+                              <th className="">Unit</th>
+                              <th className="">Unit Quantity</th>
+                              <th className="">Status</th>
                               <th></th>
                            </tr>
                         </thead>
-                        {this.state.productList.length > 0 &&
+                        {this.state.storeProductList.length > 0 &&
                            <tbody>
-                              {this.state.productList.map((i) => {
+                              {console.log(this.state.storeProductList)}
+                              {this.state.storeProductList.map((i) => {
                                  return (
-                                    <tr key={i.id}>
-                                       <td>{i.name}</td>
-                                       <td>{i.category.name}</td>
-                                       <td>{i.status ? "Active" : "Disabled"}</td>
-                                       <td>{i.status == true ?
-                                          <div className="p-0">
-                                             <button className="btn btn-danger col-12 m-0"
-                                                onClick={() => this.activation(i, false)}>
-                                                Deactivate</button>
-                                          </div>
-                                          :
-                                          <div className="p-0">
-                                             <button className="btn btn-success col-12 m-0"
-                                                onClick={() => this.activation(i, true)}>
-                                                Activate</button>
-                                          </div>
+                                    <tr key={i.productId}>
+                                       <td>{i.product.name}</td>
+                                       <td>{i.product.category.name}</td>
+                                       <td>{i.product.price}</td>
+                                       <td>{ProductUnitType[i.product.unit].name || "Error"}</td>
+                                       <td>{i.product.unitQuantity}</td>
+                                       <td>{i.status != true ? "Active" : "Disabled"
                                        }
                                        </td>
                                        <td>
                                           <div className="p-0">
                                              <button className="btn btn-primary col-12 m-0"
-                                                onClick={() => this.editProduct(i)}>
+                                                onClick={() => this.editProduct(i.product)}>
                                                 Modify Store Quantity</button>
                                           </div>
                                        </td>
                                        <td>
                                           <div className="p-0">
                                              <button className="btn btn-primary col-12 m-0"
-                                                onClick={() => this.editProduct(i)}>
+                                                onClick={() => this.editProduct(i.product)}>
                                                 Edit</button>
                                           </div>
                                        </td>
@@ -208,6 +267,9 @@ const mapStateToProps = (state) => {
 };
 /// Map actions (which may include dispatch to redux store) to component
 const mapDispatchToProps = {
+   getProducts,
+   getAllCategories,
+   getAllStores
 };
 /// Redux Connection before exporting the component
 export default connect(

@@ -65,6 +65,30 @@ namespace OSnack.Web.Api.Controllers
         }
 
         /// <summary>
+        /// Get all the Stores.
+        /// </summary>
+        #region *** 200 OK, 417 ExpectationFailed ***
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
+        #endregion
+        [HttpGet("[action]/All")]
+        // [Authorize(oAppConst.AccessPolicies.LevelTwo)] /// Done
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                /// return the list of All Store
+                return Ok(await DbContext.Stores.ToListAsync().ConfigureAwait(false));
+            }
+            catch (Exception) //ArgumentNullException
+            {
+                /// in the case any exceptions return the following error
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                return StatusCode(417, ErrorsList);
+            }
+        }
+
+        /// <summary>
         ///     Create a new Store
         /// </summary>
         #region *** 201 Created, 422 UnprocessableEntity, 412 PreconditionFailed, 417 ExpectationFailed ***

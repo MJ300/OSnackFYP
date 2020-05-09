@@ -3,46 +3,85 @@ import { oStore } from '../../_CoreFiles/CommonJs/Models-OSnack';
 import { oError } from '../../_CoreFiles/CommonJs/AppConst.Shared';
 
 export const getStores = (
-   selectedPage = 1,
-   maxNumberPerItemsPage = 1,
-   searchValue = "",
-   callBack = () => { },
-   callBackArgs = []) => {
-   return async dispatch => {
-      let state = {
-         storeList: [],
-         totalCount: 0,
-         errors: [],
-      };
-      try {
-         const response = await apiCaller.get(`Store/Get/${selectedPage}/${maxNumberPerItemsPage}/${searchValue}`);
-         switch (response.status) {
-            case 200: // Ok Response
-               await response.json().then(data => {
-                  data.list.map(d => {
-                     state.storeList.push(new oStore(d));
-                  });
-                  state.totalCount = data.totalCount;
-               }).catch(e => { console.log(e); });
-               break;
-            case 417: //Expectation Failed)
-               await response.json().then(data => {
-                  data.map(d => {
-                     state.errors = new oError(data);
-                  });
-               }).catch(e => { console.log(e); });
-               break;
-            default:
-               state.errors.push(new oError({ key: "ConnectionError", value: `Server Error Code: ${response.status}` }));
-               break;
-         };
-      } catch (e) {
-         state.errors.push(new oError({ key: "ConnectionError", value: "Server Connection Error" }));
-      }
-      callBack(state, ...callBackArgs);
-      return state;
-   };
+    selectedPage = 1,
+    maxNumberPerItemsPage = 1,
+    searchValue = "",
+    callBack = () => { },
+    callBackArgs = []) => {
+    return async dispatch => {
+        let state = {
+            storeList: [],
+            totalCount: 0,
+            errors: [],
+        };
+        try {
+            const response = await apiCaller.get(`Store/Get/${selectedPage}/${maxNumberPerItemsPage}/${searchValue}`);
+            switch (response.status) {
+                case 200: // Ok Response
+                    await response.json().then(data => {
+                        data.list.map(d => {
+                            state.storeList.push(new oStore(d));
+                        });
+                        state.totalCount = data.totalCount;
+                    }).catch(e => { console.log(e); });
+                    break;
+                case 417: //Expectation Failed)
+                    await response.json().then(data => {
+                        data.map(d => {
+                            state.errors = new oError(data);
+                        });
+                    }).catch(e => { console.log(e); });
+                    break;
+                default:
+                    state.errors.push(new oError({ key: "ConnectionError", value: `Server Error Code: ${response.status}` }));
+                    break;
+            };
+        } catch (e) {
+            state.errors.push(new oError({ key: "ConnectionError", value: "Server Connection Error" }));
+        }
+        callBack(state, ...callBackArgs);
+        return state;
+    };
 };
+
+export const getAllStores = (
+    callBack = () => { },
+    callBackArgs = []) => {
+    return async dispatch => {
+        let state = {
+            storeList: [],
+            errors: [],
+        };
+        try {
+
+            const response = await apiCaller.get(`Store/Get/All`);
+            switch (response.status) {
+                case 200: // Ok Response
+                    await response.json().then(data => {
+                        data.map(d => {
+                            state.storeList.push(new oStore(d));
+                        });
+                    }).catch(e => { console.log(e); });
+                    break;
+                case 417: //Expectation Failed)
+                    await response.json().then(data => {
+                        data.map(d => {
+                            state.errors = new oError(data);
+                        });
+                    }).catch(e => { console.log(e); });
+                    break;
+                default:
+                    state.errors.push(new oError({ key: "ConnectionError", value: `Server Error Code: ${response.status}` }));
+                    break;
+            };
+        } catch (e) {
+            state.errors.push(new oError({ key: "ConnectionError", value: "Server Connection Error" }));
+        }
+        callBack(state, ...callBackArgs);
+        return state;
+    };
+};
+
 
 export const postStore = (
    newStore = new oStore(),

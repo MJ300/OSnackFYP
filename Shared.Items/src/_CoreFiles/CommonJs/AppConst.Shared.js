@@ -53,6 +53,15 @@ export const AlertTypes = {
    Warning: "Warning",
 };
 
+export const SortByType = {
+   product: 0,
+   category: 1,
+   price: 2,
+   unit: 3,
+   unitQuantity: 4,
+   status: 5,
+};
+
 /// <summary>
 /// Get all records from search API
 /// </summary>
@@ -72,3 +81,16 @@ export class oError {
 };
 
 export const ConstMaxNumberOfPerItemsPage = 5;
+export class ddLookup {
+   id = 0;
+   name = "";
+
+   constructor(ddlookup = {
+      id: 0,
+      name: ""
+   }) {
+      this.id = ddlookup.id;
+      this.name = ddlookup.name;
+
+   }
+}

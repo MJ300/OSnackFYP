@@ -46,7 +46,9 @@ namespace OSnack.Web.Api.Database.Context
             builder.Entity<IdentityUserClaim<int>>().Ignore("Id");
             builder.Entity<IdentityUserClaim<int>>().HasKey("UserId");
 
-            builder.Entity<oStoreProduct>().HasKey(si => new { si.StoreId, si.ProductId });
+            builder.Entity<oStoreProduct>().Property(sp => sp.ProductId).ValueGeneratedNever();
+            builder.Entity<oStoreProduct>().Property(sp => sp.StoreId).ValueGeneratedNever();
+            builder.Entity<oStoreProduct>().HasKey(sp => new { sp.StoreId, sp.ProductId });
 
             builder.Entity<oStore>().HasIndex(s => s.Name).IsUnique();
             builder.Entity<oCategory>().HasIndex(c => c.Name).IsUnique();

@@ -1,4 +1,5 @@
-﻿using OSnack.Web.Api.AppSettings.CustomAttributes;
+﻿using Newtonsoft.Json;
+using OSnack.Web.Api.AppSettings.CustomAttributes;
 using OSnack.Web.Api.AppSettings.CustomTypes;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +11,7 @@ namespace OSnack.Web.Api.Database.Models
     public class oCategory
     {
         [Key]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         #region nvarchar(256), Required, StringLength(256)
         [Column(TypeName = "nvarchar(256)")]
@@ -30,7 +31,7 @@ namespace OSnack.Web.Api.Database.Models
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Unit Type is Required \n")]
-        public ProductUnitType Unit { get; set; }
+        public ProductUnitType? Unit { get; set; }
 
 
         [Required(ErrorMessage = "Unit Quantity is Required \n")]
@@ -41,6 +42,7 @@ namespace OSnack.Web.Api.Database.Models
 
         public bool Status { get; set; } = false;
 
+        [JsonIgnore]
         public ICollection<oProduct> Products { get; set; }
 
         [NotMapped]

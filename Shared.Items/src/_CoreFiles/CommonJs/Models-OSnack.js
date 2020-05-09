@@ -49,7 +49,7 @@ export class oCategory {
    id = 0;
    name = "";
    price = 0;
-   unit = 0;
+   unit = null;
    unitQuantity = 0;
    imagePath = "";
    status = false;
@@ -60,7 +60,7 @@ export class oCategory {
       id: 0,
       name: "",
       price: 0,
-      unit: 0,
+      unit: null,
       unitQuantity: 0,
       imagePath: "",
       status: false,
@@ -208,6 +208,17 @@ export class oPayment {
    }
 }
 
+const CategoryDefual = {
+   id: null,
+   name: "",
+   price: 0,
+   unit: null,
+   unitQuantity: 0,
+   imagePath: "",
+   status: false,
+   products: [],
+   imageBase64: "",
+};
 export class oProduct {
    id = 0;
    name = "";
@@ -217,8 +228,8 @@ export class oProduct {
    status = false;
    price = 0;
    unitQuantity = 0;
-   unit = 0;
-   category = new oCategory();
+   unit = null;
+   category = new oCategory(CategoryDefual);
    storeItems = [];
    averageRate = 5;
    comments = [];
@@ -232,8 +243,8 @@ export class oProduct {
       status: false,
       price: 0,
       unitQuantity: 0,
-      unit: 0,
-      category: new oCategory(),
+      unit: null,
+      category: new oCategory(CategoryDefual),
       storageItems: [],
       averageRate: 5,
       comments: [],
@@ -255,12 +266,12 @@ export class oProduct {
 }
 
 export class oRole {
-   id = 0;
+   id = null;
    name = "";
    accessClaim = "";
 
    constructor(role = {
-      id: 0,
+      id: null,
       name: "",
       accessClaim: "",
    }) {
@@ -302,19 +313,28 @@ export class oStore {
    }
 }
 
-export class oStoreItem {
+export class oStoreProduct {
    storeId = 0;
+   store = new oStore();
+   product = new oProduct();
    productId = 0;
    quantity = 0;
+   status = false;
 
-   constructor(storageItem = {
+   constructor(storeProduct = {
       storeId: 0,
+      store: new oStore(),
+      product: new oProduct(),
       productId: 0,
       quantity: 0,
+      status: 0,
    }) {
-      this.storeId = storageItem.storeId;
-      this.productId = storageItem.productId;
-      this.quantity = storageItem.quantity;
+      this.storeId = storeProduct.storeId;
+      this.productId = storeProduct.productId;
+      this.store = new oStore(storeProduct.store);
+      this.product = new oProduct(storeProduct.product);
+      this.quantity = storeProduct.quantity;
+      this.status = storeProduct.status;
    }
 }
 

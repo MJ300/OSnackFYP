@@ -31,7 +31,7 @@ const App = () => {
          <NavMenu />
          <Switch>
             {/***** Public Routes  ****/}
-            <CustomRoute exact path='/Login' Render={props => <UserManagement {...props} />} />
+            <CustomRoute exact path='/Login' Render={props => <ProductManagement {...props} />} />
 
             {/***** Protected Routes ****/}
             <ProtectedRoute exact path='/' Render={props => <Home {...props} />} />

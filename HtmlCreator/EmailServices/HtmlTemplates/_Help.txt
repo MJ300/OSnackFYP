@@ -1,10 +1,10 @@
 ﻿HtmlAndHead.txt		@@BodyTag				Main Body
 
-LogoImage.txt		@@LogoHref				The Destination Url of the logo image when clicked
+LogoImage.txt		@@LogoHref				The Destination URL of the logo image when clicked
 					@@LogoAlt				Alt Text For the logo
 					@@LogoSrc				The Image source of the logo
 
-HeaderText.txt		@@HeaderText			Large Text Centred 
+HeaderText.txt		@@HeaderText			Large Text Centered
 
 BodyText.txt		@@BodyText				Small Text responsive to screen size
 
@@ -21,7 +21,7 @@ TableRowEnd.txt		@@LeftCol				End Row Left Column
 Button.txt			@@ButtonText			Button Text
 					@@ButtonHref			Href of the button
 
-Footer.txt			@@FooterText			Footeer Text
+Footer.txt			@@FooterText			Footer Text
 
 Link.txt			@@LinkText				Link Text
 					@@LinkHref				Link Href

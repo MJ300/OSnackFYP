@@ -29,4 +29,14 @@
         Grams = 1,
         PerItem = 2
     }
+
+    public enum SortByType
+    {
+        product = 0,
+        category = 1,
+        price = 2,
+        unit = 3,
+        unitQuantity = 4,
+        status = 5,
+    }
 }

@@ -7,6 +7,7 @@ namespace OSnack.Web.Api.Database.Models
     {
         [Key, Column(Order = 0)]
         public int StoreId { get; set; }
+
         [Key, Column(Order = 1)]
         public int ProductId { get; set; }
 

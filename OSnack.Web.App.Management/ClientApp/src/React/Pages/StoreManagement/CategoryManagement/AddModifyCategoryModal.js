@@ -144,7 +144,6 @@ class AddModifyCategoryModal extends PureComponent {
                      selectedValue={category.unit}
                      onChange={i => category.unit = i.target.value}
                      list={ProductUnitType}
-                     onSelect={i => category.unit = i.id}
                   />
                </Row>
 

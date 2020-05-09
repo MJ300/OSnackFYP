@@ -106,13 +106,12 @@ namespace OSnack.Web.Api.Migrations
 
             modelBuilder.Entity("OSnack.Web.Api.Database.Models.oCategory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -314,7 +313,6 @@ namespace OSnack.Web.Api.Migrations
                         .HasMaxLength(256);
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")

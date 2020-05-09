@@ -89,10 +89,10 @@ namespace OSnack.Web.Api.Controllers
         }
 
         /// <summary>
-        ///     Create a new User
+        ///     Create a new Customer
         /// </summary>
         #region *** 201 Created, 422 UnprocessableEntity, 412 PreconditionFailed, 417 ExpectationFailed ***
-        [HttpPost("[action]")]
+        [HttpPost("Post/Employee")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
@@ -100,63 +100,45 @@ namespace OSnack.Web.Api.Controllers
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         #endregion
         //[Authorize(oAppConst.AccessPolicies.LevelOne)]  /// Ready For Test
-        public async Task<IActionResult> Post([FromBody] oUser newUser)
+        public async Task<IActionResult> PostUser([FromBody] oUser newUser)
         {
             try
             {
-                newUser.PasswordHash = newUser.Password;
-                ModelState.Clear();
-                /// if model validation failed
-                if (!TryValidateModel(newUser))
-                {
-                    oAppFunc.ExtractErrors(ModelState, ref ErrorsList);
-                    /// return bad request with all the errors
-                    return UnprocessableEntity(ErrorsList);
-                }
+                if (string.IsNullOrWhiteSpace(newUser.Password))
+                    newUser.Password = oAppFunc.passwordGenerator();
+                ErrorsList.Add(new oError("1000", newUser.Password));
 
-                /// check the database to see if a user with the same email exists
-                if (DbContext.Users.Any(d => d.Email == newUser.Email))
-                {
-                    /// extract the errors and return bad request containing the errors
-                    oAppFunc.Error(ref ErrorsList, "Email already exists.");
-                    return StatusCode(412, ErrorsList);
-                }
+                return await CreateUser(newUser).ConfigureAwait(false);
+            }
+            catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
+            {
+                /// Add the error below to the error list and return bad request
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                return StatusCode(417, ErrorsList);
+            }
+        }
 
-                /// Create the new user
-                IdentityResult newUserResult = await UserManager.CreateAsync(newUser, newUser.PasswordHash)
-                                                                .ConfigureAwait(false);
+        /// <summary>
+        ///     Create a new Customer
+        /// </summary>
+        #region *** 201 Created, 422 UnprocessableEntity, 412 PreconditionFailed, 417 ExpectationFailed ***
+        [HttpPost("[action]/Customer")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
+        [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
+        #endregion
+        //[Authorize(oAppConst.AccessPolicies.LevelOne)]  /// Ready For Test
+        public async Task<IActionResult> Post([FromBody] oUser newCustomer)
+        {
+            try
+            {
+                newCustomer.Role = await DbContext.Roles
+                    .SingleOrDefaultAsync(r => r.AccessClaim.Equals(oAppConst.AccessClaims.Customer))
+                    .ConfigureAwait(false);
 
-
-                /// If result failed
-                if (!newUserResult.Succeeded)
-                {
-                    /// Add the error below to the error list and return bad request
-                    foreach (var error in newUserResult.Errors)
-                    {
-                        oAppFunc.Error(ref ErrorsList, error.Description, error.Code);
-                    }
-                    return StatusCode(417, ErrorsList);
-                }
-
-                /// else result is successful the try to add the access claim for the user
-                IdentityResult addedClaimResult = await UserManager.AddClaimAsync(
-                        newUser,
-                        new Claim(oAppConst.AccessClaims.Type, newUser.Role.AccessClaim)
-                    ).ConfigureAwait(false);
-
-                /// if claim failed to be created
-                if (!addedClaimResult.Succeeded)
-                {
-                    /// remove the user account and return appropriate error
-                    DbContext.Users.Remove(newUser);
-                    await DbContext.SaveChangesAsync().ConfigureAwait(false);
-                    oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
-                    return StatusCode(417, ErrorsList);
-                }
-
-                /// return 201 created status with the new object
-                /// and success message
-                return Created("Success", newUser);
+                return await CreateUser(newCustomer).ConfigureAwait(false);
             }
             catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
             {
@@ -405,6 +387,79 @@ namespace OSnack.Web.Api.Controllers
 
             /// else the result is a success.
             return userDetails;
+        }
+
+        /// <summary>
+        ///     Create a new User
+        /// </summary>
+        private async Task<IActionResult> CreateUser(oUser newUser)
+        {
+            try
+            {
+                newUser.PasswordHash = newUser.Password;
+                ModelState.Clear();
+
+                /// find the selected role object of the user
+                newUser.Role = await DbContext.Roles.FindAsync(newUser.Role.Id).ConfigureAwait(false);
+
+                /// if model validation failed
+                if (!TryValidateModel(newUser))
+                {
+                    oAppFunc.ExtractErrors(ModelState, ref ErrorsList);
+                    /// return bad request with all the errors
+                    return UnprocessableEntity(ErrorsList);
+                }
+
+                /// check the database to see if a user with the same email exists
+                if (DbContext.Users.Any(d => d.Email == newUser.Email))
+                {
+                    /// extract the errors and return bad request containing the errors
+                    oAppFunc.Error(ref ErrorsList, "Email already exists.");
+                    return StatusCode(412, ErrorsList);
+                }
+
+                /// Create the new user
+                IdentityResult newUserResult = await UserManager.CreateAsync(newUser, newUser.PasswordHash)
+                                                                .ConfigureAwait(false);
+
+
+                /// If result failed
+                if (!newUserResult.Succeeded)
+                {
+                    /// Add the error below to the error list and return bad request
+                    foreach (var error in newUserResult.Errors)
+                    {
+                        oAppFunc.Error(ref ErrorsList, error.Description, error.Code);
+                    }
+                    return StatusCode(417, ErrorsList);
+                }
+
+                /// else result is successful the try to add the access claim for the user
+                IdentityResult addedClaimResult = await UserManager.AddClaimAsync(
+                        newUser,
+                        new Claim(oAppConst.AccessClaims.Type, newUser.Role.AccessClaim)
+                    ).ConfigureAwait(false);
+
+                /// if claim failed to be created
+                if (!addedClaimResult.Succeeded)
+                {
+                    /// remove the user account and return appropriate error
+                    DbContext.Users.Remove(newUser);
+                    await DbContext.SaveChangesAsync().ConfigureAwait(false);
+                    oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                    return StatusCode(417, ErrorsList);
+                }
+
+                /// return 201 created status with the new object
+                /// and success message
+                return Created("Success", newUser);
+            }
+            catch (Exception) // DbUpdateException, DbUpdateConcurrencyException
+            {
+                /// Add the error below to the error list and return bad request
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                return StatusCode(417, ErrorsList);
+            }
         }
     }
 }

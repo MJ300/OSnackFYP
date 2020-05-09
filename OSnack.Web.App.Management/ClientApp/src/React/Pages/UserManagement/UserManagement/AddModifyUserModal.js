@@ -5,7 +5,6 @@ import { Row } from 'reactstrap';
 import Modal from 'reactstrap/lib/Modal';
 import ModalBody from 'reactstrap/lib/ModalBody';
 import { AlertTypes, oError, ProductUnitType, API_URL } from '../../../../_CoreFiles/CommonJs/AppConst.Shared';
-import { getBase64fromUrlImage } from '../../../../_CoreFiles/CommonJs/AppFunc.Shared';
 import { PageHeader, Alert } from '../../../Components/Text-OSnack';
 import { Button, ButtonPopupConfirm } from '../../../Components/Buttons-OSnack';
 import { oUser } from '../../../../_CoreFiles/CommonJs/Models-OSnack';
@@ -19,7 +18,7 @@ class AddModifyUserModal extends PureComponent {
          alertList: [],
          alertType: AlertTypes.Error,
          user: new oUser(),
-         confirmPassword: ''
+         isPasswordDisabled: true,
       };
 
       this.checkApiCallResult = this.checkApiCallResult.bind(this);
@@ -47,20 +46,18 @@ class AddModifyUserModal extends PureComponent {
       this.state.user.id = 0;
    }
    async submitUser() {
-      const { user } = this.state;
-
       /// If the user object has ID more than 0
       /// then try to update the user
-      if (user.id > 0) {
-         await this.props.putUser(user,
+      if (this.state.user.id > 0) {
+         await this.props.putUser(this.state.user,
             await this.checkApiCallResult,
             ["User Updated"]
          );
       }
       /// Else the user object is a new object
       /// then try to create a new record
-      else if (user.id === 0) {
-         await this.props.postUser(user,
+      else if (this.state.user.id === 0) {
+         await this.props.postUser(this.state.user,
             await this.checkApiCallResult,
             ["New user was created"]
          );
@@ -133,15 +130,20 @@ class AddModifyUserModal extends PureComponent {
                      className="col-12 " />
                </Row>
                {/***** Password and confirm password ****/}
-               <Row>
+               <Row className="col-12 p-0 m-0 mt-2">
+                  <label className="col-12 p-0"
+                     children="Password will be generated or set new password implicitly." />
                   <Input lblText="Password" type="password"
                      bindedValue={user.password}
                      onChange={i => user.password = i.target.value}
-                     className="col-6 " />
-                  <Input lblText="Confirm Password" type="password"
-                     bindedValue={confirmPassword}
-                     onChange={i => confirmPassword = i.target.value}
-                     className="col-6 " />
+                     className="col-6 m-0 p-0 pr-2"
+                     lblDisabled
+                     disabled={this.state.isPasswordDisabled}
+                  />
+
+                  <Button title="Set Password"
+                     className="col-6 pr-2 btn-blue "
+                     onClick={() => this.setState({ isPasswordDisabled: !this.state.isPasswordDisabled })} />
                </Row>
 
 

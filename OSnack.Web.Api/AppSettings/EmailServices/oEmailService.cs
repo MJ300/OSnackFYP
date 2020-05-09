@@ -42,13 +42,13 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
             HttpContext httpContext,
             AppDbContext dbContext)
         {
-            /// Set the class attributes with the objects received from their 
+            /// Set the class attributes with the objects received from their
             /// corresponding middle-ware
             EmailSettings = emailSettings;
             DomainUrl = "https://" + httpContext.Request.Host.Value;
             DbContext = dbContext;
 
-            /// instantiate a new object of "EmailHtmlCreator" to be 
+            /// instantiate a new object of "EmailHtmlCreator" to be
             /// available for the current Email service
             HtmlCreator = new EmailHtmlCreator();
             /// Add logo to the HtmlCreator in order to display it at the top of the email
@@ -71,8 +71,8 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
                     TokenType.ResetPassword,
                     ExpiaryDate).ConfigureAwait(false);
 
-                /// The following methods must be called in order to create the email. 
-                /// The order in which this methods are called will determine 
+                /// The following methods must be called in order to create the email.
+                /// The order in which this methods are called will determine
                 /// the layout of the email from top to bottom.
                 string htmlMessage = HtmlCreator
                     .HeaderText($"Hello {user.FirstName.FirstCap()} {user.Surname.FirstCap()} \n")
@@ -91,7 +91,7 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
             }
             catch (Exception err)
             {
-                /// if there are any exceptions, Log the exception error 
+                /// if there are any exceptions, Log the exception error
                 /// on the database and return false to the caller
                 await DbContext.AppLogs.AddAsync(new oAppLog
                 {
@@ -100,6 +100,50 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
                     User = user
                 });
                 await DbContext.SaveChangesAsync().ConfigureAwait(false);
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     This method is used to send user's new password to the user after registration in order to
+        ///     validate their email address. (Employees only)
+        /// </summary>
+        /// <param name="user">The user object</param>
+        /// <param name="ExpiaryDate">The expiry date for token</param>
+        /// <returns>bool: true (if email is send correctly) else false</returns>
+        internal async Task<bool> NewEmployeePasswordAsync(oUser user, DateTime ExpiaryDate)
+        {
+            try
+            {
+                /// The following methods must be called in order to create the email.
+                /// The order in which this methods are called will determine
+                /// the layout of the email from top to bottom.
+                var htmlMessage = HtmlCreator
+                    .HeaderText(string.Format("Hello {0} {1}<br />"
+                        , user.FirstName.FirstCap()
+                        , user.Surname.FirstCap()))
+                    .HeaderText("Welcome to oSnack.")
+                    .BodyText($"Your new password is: {user.Password}<br />")
+                    .FooterFinal("", "oSnack.co.uk")
+                    .GetFinalHtml();
+
+                /// pass the information to be used to send the email.
+                await SendEmailAsync(user.Email, "You new OSnack password.", htmlMessage);
+
+                /// if all goes well then return true
+                return true;
+            }
+            catch (Exception err)
+            {
+                /// if there are any exceptions, Log the exception error
+                /// on the database and return false to the caller
+                await DbContext.AppLogs.AddAsync(new oAppLog
+                {
+                    Massage = err.Message,
+                    JsonObject = JsonConvert.SerializeObject(err),
+                    User = user
+                });
+                await DbContext.SaveChangesAsync();
                 return false;
             }
         }
@@ -118,8 +162,8 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
                 /// Create the URL for the user to go to in order to confirm email address
                 var EmailConfirmUrl = await GetUrlWithToken(user, TokenType.ConfirmEmail, ExpiaryDate).ConfigureAwait(false);
 
-                /// The following methods must be called in order to create the email. 
-                /// The order in which this methods are called will determine 
+                /// The following methods must be called in order to create the email.
+                /// The order in which this methods are called will determine
                 /// the layout of the email from top to bottom.
                 var htmlMessage = HtmlCreator
                     .HeaderText(string.Format("Hello {0} {1}<br />"
@@ -139,7 +183,7 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
             }
             catch (Exception err)
             {
-                /// if there are any exceptions, Log the exception error 
+                /// if there are any exceptions, Log the exception error
                 /// on the database and return false to the caller
                 await DbContext.AppLogs.AddAsync(new oAppLog
                 {
@@ -184,7 +228,7 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
                 Text = htmlMessage
             };
 
-            /// Create a multi part email body in order to enable attachment 
+            /// Create a multi part email body in order to enable attachment
             Multipart multiPartEmail = new Multipart("Mail");
             /// Add the body to the multi part email
             multiPartEmail.Add(body);
@@ -192,7 +236,7 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
             /// if Email must have an attachment then add it to the multi part email
             if (Attachment != null)
             {
-                /// Open a memory stream for 
+                /// Open a memory stream for
                 using (MemoryStream attSteam = new MemoryStream(Attachment))
                 {
                     MimePart attachment = new MimePart("application", "PDF");
@@ -265,15 +309,15 @@ namespace OSnack.Web.Api.AppSettings.EmailServices
                 User = user,
                 ValueType = requestType,
                 ExpiaryDateTime = ExpiaryDate,
-                Value = Guid.NewGuid().ToString().Replace("-", "")
             };
+            token.Value = token.GetToken();
 
             /// Add the new token the context
             await DbContext.AddAsync(token);
             /// Save the changes to the database
             await DbContext.SaveChangesAsync();
 
-            /// return the requested URL 
+            /// return the requested URL
             return string.Format(@"{0}/{1}/{2}", DomainUrl, requestType, token.Value);
         }
 

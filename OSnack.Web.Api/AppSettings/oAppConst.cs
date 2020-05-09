@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using OSnack.Web.Api.AppSettings.AppModels;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
@@ -10,7 +9,7 @@ namespace OSnack.Web.Api.AppSettings
     /// <summary>
     /// Web API Only constant variable
     /// </summary>
-    internal class oAppConst
+    internal static class oAppConst
     {
         /// <summary>
         /// Get all records from search API
@@ -18,11 +17,11 @@ namespace OSnack.Web.Api.AppSettings
         public const string GetAllRecords = "***GET-ALL***";
 
         /// <summary>
-        /// Three Levels of access within the system.<br /> 
+        /// Three Levels of access within the system.<br />
         /// * Admin<br/>
-        /// * Manager<br/> 
-        /// * Staff<br/> 
-        /// * Customer  
+        /// * Manager<br/>
+        /// * Staff<br/>
+        /// * Customer
         /// </summary>
         public struct AccessClaims
         {
@@ -36,7 +35,7 @@ namespace OSnack.Web.Api.AppSettings
         }
 
         /// <summary>
-        /// Three Levels of access policies within the system.<br /> 
+        /// Three Levels of access policies within the system.<br />
         /// </summary>
         public struct AccessPolicies
         {
@@ -58,7 +57,6 @@ namespace OSnack.Web.Api.AppSettings
             public const string LevelFour = "LevelFour";
         }
 
-
         public struct CommonErrors
         {
             /// <summary>
@@ -67,6 +65,7 @@ namespace OSnack.Web.Api.AppSettings
             public const string ServerError = "Server Error. Please Contact Administrator.";
 
         }
+
 
         /// <summary>
         /// Get the information from the appSettings json file
@@ -81,18 +80,8 @@ namespace OSnack.Web.Api.AppSettings
                 if (!File.Exists(jsonFilePath))
                     jsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"AppSettings\AppItems\oSettings.json");
                 /// Read the json file from that directory
-                /// de-serialise the json string into an object of AppSettings and return it 
+                /// de-serialise the json string into an object of AppSettings and return it
                 return JsonConvert.DeserializeObject<oSettings>(File.ReadAllText(jsonFilePath));
-
-
-                //var assembly = IntrospectionExtensions.GetTypeInfo(typeof(oSettings)).Assembly;
-                //Stream stream = assembly.GetManifestResourceStream("OSnack.Web.APi.oSettings.json");
-                //string text = "";
-                //using (var reader = new StreamReader(stream))
-                //{
-                //    text = reader.ReadToEnd();
-                //}
-                //return JsonConvert.DeserializeObject<oSettings>(text);
             }
         }
     }

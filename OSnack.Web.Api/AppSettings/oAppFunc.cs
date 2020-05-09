@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.Diagnostics;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace OSnack.Web.Api.AppSettings
@@ -13,6 +16,135 @@ namespace OSnack.Web.Api.AppSettings
     /// </summary>
     public static class oAppFunc
     {
+
+        /// <summary>
+        /// this method is used to generate random password with the parameters given
+        /// </summary>
+        /// <param name="length"></param>
+        /// <param name="capLetters">Must contain at least one. It is also used as default if all conditions fails</param>
+        /// <param name="lowerLetters">Must contain at least one. It is also used as default if all conditions fails</param>
+        /// <param name="digits">optional 0-9</param>
+        /// <param name="symbols">optional "!@#$%^&*()_-+=[{]};:<>|./?"</param>
+        /// <returns></returns>
+        public static string passwordGenerator(
+            int length = 4,
+            int capLetters = 1,
+            int lowerLetters = 1,
+            int digits = 1,
+            int symbols = 1)
+        {
+            const string cap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string low = "abcdefghijklmnopqrstuvwxyz";
+            const string dig = "0123456789";
+            const string sym = "!@#$%^&*()_-+=[{]};:<>|./?";
+            string all = cap + low + dig + sym;
+
+            string password = "";
+
+            int capLetterCount = capLetters;
+            int lowerLettersCount = lowerLetters;
+            int digitsCount = digits;
+            int symbolsCount = symbols;
+
+            Random rn = new Random();
+            char getRandomChar() => all[rn.Next(all.Length)];
+            StringComparison SC = StringComparison.InvariantCulture;
+
+            bool firstCheck(char newChar)
+            {
+                if (capLetterCount > 0 && cap.Contains(newChar, SC))
+                {
+                    capLetterCount--;
+                    password += newChar;
+                    return true;
+                }
+                if (lowerLettersCount > 0 && low.Contains(newChar, SC))
+                {
+                    lowerLettersCount--;
+                    password += newChar;
+                    return true;
+                }
+                if (digitsCount > 0 && dig.Contains(newChar, SC))
+                {
+                    digitsCount--;
+                    password += newChar;
+                    return true;
+                }
+                if (symbolsCount > 0 && sym.Contains(newChar, SC))
+                {
+                    symbolsCount--;
+                    password += newChar;
+                    return true;
+                }
+                return false;
+            }
+            for (int i = 0; i < length; i++)
+            {
+                char selectedChar = getRandomChar();
+
+
+                if (firstCheck(selectedChar)) continue;
+                else
+                {
+                    if (capLetterCount > 0 || lowerLetters > 0 || digitsCount > 0 || symbolsCount > 0)
+                    {
+                        bool trigger = true;
+                        while (trigger)
+                        {
+                            char newChar = getRandomChar();
+                            if (firstCheck(newChar)) trigger = false;
+                        }
+                        continue;
+                    }
+                }
+
+                if (cap.Contains(selectedChar, SC) || low.Contains(selectedChar, SC))
+                {
+                    password += selectedChar;
+                    continue;
+                }
+                if (dig.Contains(selectedChar, SC) && digits == 0)
+                {
+                    bool trigger = true;
+                    while (trigger)
+                    {
+                        char newChar = getRandomChar();
+                        if (!dig.Contains(newChar, SC))
+                        {
+                            password += newChar;
+                            trigger = false;
+                        }
+                    }
+                    continue;
+                }
+                if (sym.Contains(selectedChar, SC) && symbols == 0)
+                {
+                    bool trigger = true;
+                    while (trigger)
+                    {
+                        char newChar = getRandomChar();
+                        if (!sym.Contains(newChar, SC))
+                        {
+                            password += newChar;
+                            trigger = false;
+                        }
+                    }
+                    continue;
+                }
+
+                if (rn.Next(0, 1) == 0)
+                {
+                    password += cap[rn.Next(cap.Length)];
+                }
+                else
+                {
+                    password += low[rn.Next(low.Length)];
+                }
+            }
+
+            return password;
+        }
+
         public static void DeleteImage(string path, string webRootPath) =>
             File.Delete(string.Format(@"{0}\{1}", webRootPath, path));
 

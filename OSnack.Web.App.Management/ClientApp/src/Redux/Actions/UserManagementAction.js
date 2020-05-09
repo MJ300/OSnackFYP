@@ -54,7 +54,9 @@ export const postUser = (
          errors: []
       };
       try {
-         const response = await apiCaller.post("User/Post", newUser);
+         if (newUser.role.id == null)
+            newUser.role.id = 0;
+         const response = await apiCaller.post("User/Post/Employee", newUser);
 
          switch (response.status) {
             case 201: // Created Response

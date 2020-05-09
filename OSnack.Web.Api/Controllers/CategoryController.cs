@@ -99,6 +99,30 @@ namespace OSnack.Web.Api.Controllers
         }
 
         /// <summary>
+        /// Get all the Categories.
+        /// </summary>
+        #region *** 200 OK, 417 ExpectationFailed ***
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
+        #endregion
+        [HttpGet("[action]/All")]
+        // [Authorize(oAppConst.AccessPolicies.LevelTwo)] /// Done
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                /// return the list of All Categories
+                return Ok(await DbContext.Categories.ToListAsync().ConfigureAwait(false));
+            }
+            catch (Exception) //ArgumentNullException
+            {
+                /// in the case any exceptions return the following error
+                oAppFunc.Error(ref ErrorsList, oAppConst.CommonErrors.ServerError);
+                return StatusCode(417, ErrorsList);
+            }
+        }
+
+        /// <summary>
         ///     Create a new Category
         /// </summary>
         #region *** 201 Created, 422 UnprocessableEntity, 412 PreconditionFailed, 417 ExpectationFailed ***
@@ -131,10 +155,6 @@ namespace OSnack.Web.Api.Controllers
                     return StatusCode(412, ErrorsList);
                 }
 
-                /// else Category object is made without any errors
-                /// Add the new Category to the EF context
-                await DbContext.Categories.AddAsync(newCategory).ConfigureAwait(false);
-
                 try
                 {
                     newCategory.ImagePath = oAppFunc.SaveImageToWWWRoot(newCategory.Name,
@@ -147,8 +167,19 @@ namespace OSnack.Web.Api.Controllers
                     oAppFunc.Error(ref ErrorsList, "Image cannot be saved.");
                     return StatusCode(412, ErrorsList);
                 }
-                /// save the changes to the database
-                await DbContext.SaveChangesAsync().ConfigureAwait(false);
+                /// else Category object is made without any errors
+                /// Add the new Category to the EF context
+                await DbContext.Categories.AddAsync(newCategory).ConfigureAwait(false);
+                try
+                {
+                    /// save the changes to the database
+                    await DbContext.SaveChangesAsync().ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                    oAppFunc.DeleteImage(newCategory.ImagePath, WebHost.WebRootPath);
+                    throw;
+                }
 
                 /// return 201 created status with the new object
                 /// and success message
@@ -218,12 +249,14 @@ namespace OSnack.Web.Api.Controllers
                 {
                     try
                     {
-                        oAppFunc.DeleteImage(modifiedCategory.ImagePath, WebHost.WebRootPath);
+                        string oldImagePath = modifiedCategory.ImagePath.Clone().ToString();
 
                         modifiedCategory.ImagePath = oAppFunc.SaveImageToWWWRoot(modifiedCategory.Name,
                                 WebHost.WebRootPath,
                                 modifiedCategory.ImageBase64,
                                 @"Images/Categories");
+
+                        oAppFunc.DeleteImage(oldImagePath, WebHost.WebRootPath);
                     }
                     catch (Exception)
                     {

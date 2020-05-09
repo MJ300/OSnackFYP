@@ -8,17 +8,22 @@ namespace HtmlCreator.EmailServices
 {
     public static class EmailHtmlExtentions
     {
-        public static EmailHtmlCreator AddLogo(this EmailHtmlCreator emailHtml, string Herf, string Alt, string Src = null)
+        /// <summary>
+        /// Add the logo Element to this instance
+        /// </summary>
+        /// <param name="emailHtml"></param>
+        /// <param name="Herf"></param>
+        /// <param name="Alt"></param>
+        /// <param name="Src"></param>
+        /// <returns></returns>
+        public static EmailHtmlCreator AddLogo(
+            this EmailHtmlCreator emailHtml,
+            string Herf,
+            string Alt,
+            string Src = null)
         {
             if (Src == null)
                 return emailHtml;
-
-            //var Src = string.Format("data:image/base64,");
-            //using (var ms = new MemoryStream())
-            //{
-            //    imageFile.Save(ms, imageFile.RawFormat);
-            //    Src += Convert.ToBase64String(ms.ToArray());
-            //}
 
             var LogoHtml = "";
             foreach (var line in emailHtml.ReadFile("LogoImage"))
@@ -135,9 +140,9 @@ namespace HtmlCreator.EmailServices
             return emailHtml;
 
         }
-        public static EmailHtmlCreator FooterFinal(this EmailHtmlCreator emailHtml, string Links, string Text)
+        public static EmailHtmlCreator FooterFinal(this EmailHtmlCreator emailHtml, string Link, string Text)
         {
-            Text += Links;
+            Text += Link;
 
             var finalHtml = "";
             foreach (var line in emailHtml.ReadFile("Footer"))
